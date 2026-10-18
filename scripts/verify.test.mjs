@@ -53,7 +53,7 @@ test('AI adapter uses server credentials, grounded context and no response stora
     assert.equal(endpoint,'https://api.openai.com/v1/responses');
     assert.equal(options.headers.Authorization,'Bearer test-only-placeholder');
     const payload=JSON.parse(options.body); assert.equal(payload.store,false); assert.equal(payload.model,'configured-model');
-    assert.match(payload.instructions,/Regina margherita/); assert.equal(payload.input,'Vilka pizzor finns?');
+    assert.match(payload.instructions,/REGINA MARGHERITA/); assert.equal(payload.input,'Vilka pizzor finns?');
     return Response.json({status:'completed',output:[{type:'message',content:[{type:'output_text',text:'Regina margherita kostar 145 kr.'}]}]});
   });
   assert.equal(response.status,200); assert.equal((await response.json()).text,'Regina margherita kostar 145 kr.');

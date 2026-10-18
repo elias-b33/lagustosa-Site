@@ -1,6 +1,6 @@
 # Källor och originalmaterial
 
-Kontrollerat 18 oktober 2026.
+Kontrollerat 19 oktober 2026.
 
 - [La Gustosas startsida](https://www.lagustosa.se/): logotyp, restaurangbilder, adress, telefon, e-post, berättelse om eget bröd och italienska viner.
 - [À la carte och dryck](https://www.lagustosa.se/menyer/): 45 maträtter och priser, importerade till `public/menu-data.js`.
@@ -10,6 +10,10 @@ Kontrollerat 18 oktober 2026.
 - [Galleri](https://www.lagustosa.se/galleri/): originalbilder av matsal, soffhörna och fasad.
 
 Startsidan har kvar en äldre uppgift om lunch måndag–fredag. Dess uppdaterade öppettider anger måndagsstängt från 1 september 2026, och lunchsidan anger tisdag–fredag. Den nya sidan använder måndagsstängt och tisdag–fredag för lunch.
+
+Restaurangens presentation, vintext, lunchtext, shoppinglunchtext och take away-text återges med originalets formuleringar och stavning. Rättnamn, beskrivningar och prisetiketter behåller originalets versaler och skrivsätt, inklusive ”(MEDIUM)” och ”:-”. Mellanrum och Unicode normaliseras vid import. Nya funktioner som sökning, sparade rätter, bokningsförfrågan och menyguide har egna gränssnittstexter.
+
+Shoppinglunchens text använder 12.00–17.00 från den särskilda shoppinglunchsidan; startsidans kort anger 18.00. Sammanfattningskortet länkar till shoppingmenyn utan att upprepa en motstridig tid.
 
 Originalbilderna och logotypen finns oförändrade i `public/assets/original/`. `reference/assets.json` dokumenterar kontrollsummor. CSS anpassar hur bilderna beskärs i olika skärmstorlekar; bildfilerna är oförändrade. Inga externa stockfoton eller genererade matbilder används.
 

@@ -61,5 +61,5 @@ export function localAnswer(question) {
     items = items.map(item => ({ item, score: words.reduce((n,w) => n + (normalize(item.name).includes(w) ? 3 : normalize(item.description).includes(w) ? 1 : 0), 0) })).filter(entry => entry.score > 0).sort((a,b) => b.score-a.score).map(entry => entry.item);
   }
   if (!items.length) return { text: 'Jag hittar ingen säker träff i menyn. Prova en rätt, en ingrediens eller en kategori, till exempel ”pasta” eller ”pizza under 190 kr”. För andra frågor hjälper personalen gärna till på 072-993 99 93.', action: 'menu' };
-  return { text: 'Här är några rätter från menyn:\n\n' + items.slice(0, 4).map(item => `${item.name} · ${item.price} kr\n${item.description}`).join('\n\n'), action: 'menu', category };
+  return { text: 'Här är några rätter från menyn:\n\n' + items.slice(0, 4).map(item => `${item.name} — ${item.price} kr\n${item.description}`).join('\n\n'), action: 'menu', category };
 }
