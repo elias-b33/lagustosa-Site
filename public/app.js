@@ -78,17 +78,31 @@ $$('[data-lunch]').forEach(button => button.addEventListener('click', () => sele
 $('.occasion-tabs').addEventListener('keydown',event => tabKeys(event,'[data-lunch]',button => selectLunch(button.dataset.lunch)));
 $$('[data-occasion]').forEach(link => link.addEventListener('click', () => selectLunch(link.dataset.occasion)));
 
+const menuDetailViews = new Map();
+function getMenuDetailView(kind) {
+  if (!menuDetailViews.has(kind)) {
+    const view = document.createElement('div');
+    view.innerHTML = extraMenus[kind].sections.map(section => `<section class="detail-section"><h3>${escape(section.title)}</h3>${section.items ? section.items.map(item => `<article class="detail-item"><div class="detail-item-heading"><h4>${escape(item.name)}</h4>${item.priceLabel ? `<span>${escape(item.priceLabel)}</span>` : ''}</div>${item.description ? `<p>${escape(item.description)}</p>` : ''}</article>`).join('') : section.paragraphs.map(text => `<p>${escape(text)}</p>`).join('')}</section>`).join('');
+    menuDetailViews.set(kind, view);
+  }
+  return menuDetailViews.get(kind);
+}
 function openMenuDetail(kind) {
   const menu = extraMenus[kind]; if (!menu) return;
   const fromGuide = $('#assistant-dialog').open;
   if (fromGuide) $('#assistant-dialog').close();
   const dialog = $('#menu-detail-dialog');
   dialog.dataset.returnToGuide = String(fromGuide);
-  $('#menu-detail-title').textContent = menu.title;
-  $('#menu-detail-intro').textContent = menu.intro || '';
-  $('#menu-detail-intro').hidden = !menu.intro;
-  $('#menu-detail-content').innerHTML = menu.sections.map(section => `<section class="detail-section"><h3>${escape(section.title)}</h3>${section.items ? section.items.map(item => `<article class="detail-item"><div class="detail-item-heading"><h4>${escape(item.name)}</h4>${item.priceLabel ? `<span>${escape(item.priceLabel)}</span>` : ''}</div>${item.description ? `<p>${escape(item.description)}</p>` : ''}</article>`).join('') : section.paragraphs.map(text => `<p>${escape(text)}</p>`).join('')}</section>`).join('');
-  openDialog(dialog); dialog.scrollTop = 0;
+  if (dialog.dataset.menuKind !== kind) {
+    $('#menu-detail-title').textContent = menu.title;
+    $('#menu-detail-intro').textContent = menu.intro || '';
+    $('#menu-detail-intro').hidden = !menu.intro;
+    $('#menu-detail-content').replaceChildren(getMenuDetailView(kind));
+    dialog.dataset.menuKind = kind;
+  }
+  openDialog(dialog);
+  $('#menu-detail-scroll').scrollTop = 0;
+  $('#menu-detail-scroll').focus({preventScroll:true});
 }
 // Delegation also covers buttons rendered in lunch tabs and quick-guide content.
 document.addEventListener('click', event => {
