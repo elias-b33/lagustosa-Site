@@ -84,12 +84,40 @@ $$('[data-gallery]').forEach(button => button.addEventListener('click', () => { 
 $('#gallery-prev').addEventListener('click', () => showPhoto(photoIndex-1)); $('#gallery-next').addEventListener('click', () => showPhoto(photoIndex+1));
 $('#gallery-dialog').addEventListener('keydown',event => { if (event.key === 'ArrowLeft') showPhoto(photoIndex-1); if (event.key === 'ArrowRight') showPhoto(photoIndex+1); });
 
+// Kept for a future chat launch. The current guide only uses explicit click choices.
+const FREE_TEXT_CHAT_ENABLED = false;
+function guideDishes(kind) {
+  let items = menuData.items.filter(item => item.category === kind);
+  if (kind === 'pizza') items = items.filter(item => item.price < 190).sort((a,b) => a.price-b.price);
+  return '<ul class="guide-dish-list">' + items.slice(0,3).map(item => `<li><span>${escape(item.name)}</span><strong>${escape(item.priceLabel)}</strong></li>`).join('') + `</ul><a class="text-link" href="#meny" data-guide-category="${kind}">Se alla ${kind === 'pasta' ? 'pastarätter' : 'pizzor'} <span aria-hidden="true">→</span></a>`;
+}
+const guideSections = {
+  pasta: { title:'Pasta', html:() => guideDishes('pasta') },
+  pizza: { title:'Pizza under 190 kr', html:() => guideDishes('pizza') },
+  lunch: { title:'Dagens lunch', html:() => weekdayContent },
+  bar: { title:'Bar & alkohol', html:() => $('#guide-bar-content').innerHTML },
+  hours: { title:'Öppettider', html:() => $('.hours dl').outerHTML + '<a class="text-link" href="#kontakt">Kontakt & hitta hit <span aria-hidden="true">→</span></a>' },
+};
+$$('[data-guide-topic]').forEach(button => button.addEventListener('click', () => {
+  const topic = button.dataset.guideTopic;
+  if (topic === 'booking') { openBooking(); return; }
+  const section = guideSections[topic]; if (!section) return;
+  $$('[data-guide-topic][aria-pressed]').forEach(choice => choice.setAttribute('aria-pressed',String(choice === button)));
+  $('#guide-content').innerHTML = `<h3 id="guide-topic-title">${escape(section.title)}</h3>` + section.html();
+  $('#guide-content').hidden = false;
+}));
+$('#guide-content').addEventListener('click', event => {
+  const link = event.target.closest('a[href^="#"]'); if (!link) return;
+  if (link.dataset.guideCategory) selectCategory(link.dataset.guideCategory);
+  $('#assistant-dialog').close();
+});
+
 let aiEndpoint = null, configChecked = false, chatBusy = false;
 async function checkAI() {
   if (configChecked) return; configChecked = true;
   try { const response = await fetch('./site-config.json', { signal:AbortSignal.timeout(2500) }); if (!response.ok) return; const config = await response.json(); if (typeof config.assistantApi === 'string' && config.assistantApi.startsWith('/') && !config.assistantApi.startsWith('//')) { aiEndpoint = config.assistantApi; $('#assistant-mode').textContent = 'AI-menyhjälp från OpenAI'; $('#chat-note').textContent = 'Din fråga skickas till OpenAI. AI kan ha fel. Skriv inga känsliga uppgifter. Fråga alltid personalen om allergier.'; } } catch { /* Static preview and offline mode intentionally retain local answers. */ }
 }
-$$('[data-assistant]').forEach(button => button.addEventListener('click', () => { openDialog($('#assistant-dialog')); checkAI(); }));
+$$('[data-assistant]').forEach(button => button.addEventListener('click', () => { openDialog($('#assistant-dialog')); if (FREE_TEXT_CHAT_ENABLED) checkAI(); }));
 function appendMessage(text, role, answer) {
   const node = document.createElement('div'); node.className=`chat-message ${role}`; node.textContent=text;
   const actions = { menu:['Visa menyn','#meny'], contact:['Kontakt & öppettider','#kontakt'], lunch:['Se veckans lunch','https://www.lagustosa.se/dagens-lunch/'], weekend:['Se shoppingmenyn','https://www.lagustosa.se/shoppinglunch/'], aw:['Se after work-menyn','https://www.lagustosa.se/afterwork/'], drinks:['Se dryckesmenyn','https://www.lagustosa.se/menyer/'] };
@@ -110,8 +138,16 @@ async function ask(question) {
     pending.remove(); appendMessage(answer.text,'assistant',answer);
   } finally { chatBusy=false; pending.remove(); $('#chat-form button').disabled=false; $$('.quick-prompts button').forEach(button=>button.disabled=false); }
 }
-$('#chat-form').addEventListener('submit',event=> { event.preventDefault(); ask($('#chat-input').value); });
-$$('[data-prompt]').forEach(button=>button.addEventListener('click',()=>ask(button.dataset.prompt)));
+if (FREE_TEXT_CHAT_ENABLED) {
+  $('#quick-guide').hidden = true;
+  $('#chat-features').hidden = false;
+  $('#chat-features').inert = false;
+  $('#assistant-dialog').classList.add('chat-enabled');
+  $('#assistant-title').textContent = 'Menyguide';
+  $('#guide-privacy').textContent = 'Menyguiden använder lokala svar tills en AI-tjänst har anslutits. Om AI är aktiverad visas det i guiden, och din fråga skickas till OpenAI för att skapa ett svar. Skriv inte personliga eller känsliga uppgifter i chatten.';
+  $('#chat-form').addEventListener('submit',event=> { event.preventDefault(); ask($('#chat-input').value); });
+  $$('[data-prompt]').forEach(button=>button.addEventListener('click',()=>ask(button.dataset.prompt)));
+}
 $('#privacy-open').addEventListener('click',()=>openDialog($('#privacy-dialog')));
 $('#clear-saved').addEventListener('click',()=> { saved.clear(); try { localStorage.removeItem(savedKey); } catch {} renderMenu(); $('#privacy-status').textContent='Dina sparade rätter har rensats.'; });
 $('#year').textContent=new Date().getFullYear();

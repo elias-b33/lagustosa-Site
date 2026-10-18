@@ -23,4 +23,13 @@ dialog{border:0;padding:45px;background:var(--paper);color:var(--ink);max-width:
 .hero-content h1{text-transform:uppercase}.hero-content>p:not(.eyebrow){max-width:630px;margin-inline:auto}
 @media(max-width:1100px){.menu-tabs{width:100%}}
 @media(max-width:760px){.about h2{font-size:36px}.hero-content{padding-top:220px}.hero-content h1{font-size:50px;line-height:1.1}.hero-bottom>span{font-size:8px;letter-spacing:.6px}.lunch-price strong{font-size:35px}.lunch-price strong small{display:block;text-align:right;font-size:16px}.dish h3{font-size:23px}}
+.assistant-dialog:not(.chat-enabled){overflow:auto}
+.quick-guide{padding:0 27px 22px}.guide-intro{font-size:14px;color:var(--muted);margin-bottom:19px}
+.guide-options{display:grid;grid-template-columns:1fr 1fr;gap:9px}.guide-options button{font-size:13px;line-height:1.4;text-align:left;min-height:47px;padding:10px 12px;border:1px solid #cbd1c1}.guide-options button:hover{background:#e9ece3}.guide-options button[aria-pressed=true]{background:#e9ece3;border-color:#77816d;color:var(--wine)}
+.guide-content{border-top:1px solid var(--line);margin-top:24px;padding-top:20px}.guide-content h3{font-size:27px;line-height:1.2;margin-bottom:16px}.guide-content p{font-size:14px;line-height:1.7;margin-bottom:15px}.guide-content .text-link{font-size:13px;gap:15px}.guide-content .lunch-price{padding-top:0}.guide-content .lunch-price strong{font-size:32px}.guide-content .lunch-price strong small{display:block;font-size:15px;text-align:right}
+.guide-dish-list{list-style:none;padding:0;margin:0 0 12px}.guide-dish-list li{display:flex;align-items:baseline;justify-content:space-between;gap:18px;border-bottom:1px solid var(--line);padding:12px 0;font-size:13px;line-height:1.6}.guide-dish-list li:first-child{padding-top:0}.guide-dish-list strong{font-weight:500;white-space:nowrap}
+.guide-drinks strong{display:block;font-size:14px;font-weight:600;color:var(--ink)}.guide-drinks p{color:var(--muted)}.guide-links{display:flex;flex-wrap:wrap;gap:12px 24px}
+.guide-content dl{margin:0 0 16px;font-size:13px}.guide-content dl>div{display:flex;justify-content:space-between;gap:20px;padding:5px 0;border-bottom:1px solid var(--line)}.guide-content dd{margin:0}
+.guide-footer{margin:22px 0 0;padding-top:17px;border-top:1px solid var(--line);font-size:11px;line-height:1.8;color:var(--muted)}.guide-footer a{font-size:13px;color:var(--wine)}
+@media(max-width:760px){.quick-guide{padding:0 22px 20px}.guide-options{gap:8px}.guide-options button{padding:10px;font-size:13px}.assistant-dialog:not(.chat-enabled){max-height:calc(100svh - 24px)}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
