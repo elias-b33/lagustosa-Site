@@ -1,4 +1,5 @@
 import { menuData } from './menu-data.js';
+import { extraMenus } from './extra-menus.js';
 import { stockholmDate, bookingTimes, validateBooking, normalize, localAnswer } from './domain.js';
 
 const $ = selector => document.querySelector(selector);
@@ -29,7 +30,7 @@ function renderMenu() {
   else { $('#menu-dishes').setAttribute('aria-labelledby', `tab-${category}`); $('#menu-dishes').removeAttribute('aria-label'); }
   $('#menu-dishes').innerHTML = dishes.length ? dishes.map(item => `<article class="dish">${item.note ? `<span class="dish-tag">${escape(item.note)}</span>` : ''}<div class="dish-line"><h3>${escape(item.name)}</h3><span class="dish-price">${escape(item.priceLabel)}<span class="sr-only"> kronor</span></span></div><p>${escape(item.description)}</p><button class="dish-save" data-save="${item.id}" aria-label="${saved.has(item.id) ? 'Ta bort' : 'Spara'} ${escape(item.name)}${saved.has(item.id) ? ' från sparade rätter' : ''}" aria-pressed="${saved.has(item.id)}">${bookmark}</button></article>`).join('') : `<div class="menu-empty"><h3>${savedOnly ? 'Här samlas dina favoriter.' : 'Ingen rätt hittades.'}</h3><p>${savedOnly ? 'Spara en rätt med bokmärket bredvid priset.' : 'Prova ett annat sökord, som pasta, lax eller mozzarella.'}</p><button class="text-link" id="reset-menu">Visa menyn igen →</button></div>`;
 }
-function selectCategory(value, updateUrl = true) { category = value; savedOnly = false; $('#menu-search').value = ''; renderMenu(); if (updateUrl) { const url = new URL(location.href); url.searchParams.set('meny', category); history.replaceState(null, '', url); } }
+function selectCategory(value, updateUrl = true) { category = value; savedOnly = false; $('#menu-search').value = ''; renderMenu(); if (updateUrl && location.protocol !== 'file:') { const url = new URL(location.href); url.searchParams.set('meny', category); history.replaceState(null, '', url); } }
 $('#menu-tabs').addEventListener('click', event => { const button = event.target.closest('[data-category]'); if (button) selectCategory(button.dataset.category); });
 function tabKeys(event, selector, activate) {
   if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
@@ -71,11 +72,33 @@ $('#booking-form').addEventListener('submit', event => {
 $('#booking-back').addEventListener('click', () => { $('#booking-review').hidden = true; $('#booking-form').hidden = false; $('#booking-date').focus(); });
 
 const weekdayContent = $('#lunch-panel').innerHTML;
-const weekendContent = '<div class="lunch-price"><span>SHOPPINGLUNCH</span></div><p>Varje Lördag &amp; Söndag mellan Kl. 12.00 – 17.00 har vi vår Shoppinglunch på Sandwallsplats i Borås då vi har ett bättre pris på utvalda rätter samt dryck. Ta en paus i all shopping, eller börja dagen hos oss med dina vänner, kollegor, nära &amp; kära.</p><a class="text-link" href="https://www.lagustosa.se/shoppinglunch/" target="_blank" rel="noopener">Shopping Meny <span aria-hidden="true">↗</span></a>';
+const weekendContent = '<div class="lunch-price"><span>SHOPPINGLUNCH</span></div><p>Varje Lördag &amp; Söndag mellan Kl. 12.00 – 17.00 har vi vår Shoppinglunch på Sandwallsplats i Borås då vi har ett bättre pris på utvalda rätter samt dryck. Ta en paus i all shopping, eller börja dagen hos oss med dina vänner, kollegor, nära &amp; kära.</p><button class="text-link" data-menu-detail="weekend">Shopping Meny <span aria-hidden="true">→</span></button>';
 function selectLunch(kind) { $$('[data-lunch]').forEach(button => { button.setAttribute('aria-selected',String(button.dataset.lunch === kind)); button.tabIndex = button.dataset.lunch === kind ? 0 : -1; }); $('#lunch-panel').innerHTML = kind === 'weekend' ? weekendContent : weekdayContent; $('#lunch-panel').setAttribute('aria-labelledby',kind+'-tab'); }
 $$('[data-lunch]').forEach(button => button.addEventListener('click', () => selectLunch(button.dataset.lunch)));
 $('.occasion-tabs').addEventListener('keydown',event => tabKeys(event,'[data-lunch]',button => selectLunch(button.dataset.lunch)));
 $$('[data-occasion]').forEach(link => link.addEventListener('click', () => selectLunch(link.dataset.occasion)));
+
+function openMenuDetail(kind) {
+  const menu = extraMenus[kind]; if (!menu) return;
+  const fromGuide = $('#assistant-dialog').open;
+  if (fromGuide) $('#assistant-dialog').close();
+  const dialog = $('#menu-detail-dialog');
+  dialog.dataset.returnToGuide = String(fromGuide);
+  $('#menu-detail-title').textContent = menu.title;
+  $('#menu-detail-intro').textContent = menu.intro || '';
+  $('#menu-detail-intro').hidden = !menu.intro;
+  $('#menu-detail-content').innerHTML = menu.sections.map(section => `<section class="detail-section"><h3>${escape(section.title)}</h3>${section.items ? section.items.map(item => `<article class="detail-item"><div class="detail-item-heading"><h4>${escape(item.name)}</h4>${item.priceLabel ? `<span>${escape(item.priceLabel)}</span>` : ''}</div>${item.description ? `<p>${escape(item.description)}</p>` : ''}</article>`).join('') : section.paragraphs.map(text => `<p>${escape(text)}</p>`).join('')}</section>`).join('');
+  openDialog(dialog); dialog.scrollTop = 0;
+}
+// Delegation also covers buttons rendered in lunch tabs and quick-guide content.
+document.addEventListener('click', event => {
+  const menuButton = event.target.closest('[data-menu-detail]');
+  if (menuButton) { event.preventDefault(); openMenuDetail(menuButton.dataset.menuDetail); }
+});
+$('#menu-detail-dialog').addEventListener('close', () => {
+  if ($('#menu-detail-dialog').dataset.returnToGuide === 'true') openDialog($('#assistant-dialog'));
+});
+$('#directions-open').addEventListener('click', () => openDialog($('#directions-dialog')));
 
 const photos = $$('[data-gallery]').map(button => ({ src:button.querySelector('img').src, alt:button.querySelector('img').alt, title:button.querySelector('img').alt }));
 let photoIndex = 0;
@@ -120,9 +143,11 @@ async function checkAI() {
 $$('[data-assistant]').forEach(button => button.addEventListener('click', () => { openDialog($('#assistant-dialog')); if (FREE_TEXT_CHAT_ENABLED) checkAI(); }));
 function appendMessage(text, role, answer) {
   const node = document.createElement('div'); node.className=`chat-message ${role}`; node.textContent=text;
-  const actions = { menu:['Visa menyn','#meny'], contact:['Kontakt & öppettider','#kontakt'], lunch:['Se veckans lunch','https://www.lagustosa.se/dagens-lunch/'], weekend:['Se shoppingmenyn','https://www.lagustosa.se/shoppinglunch/'], aw:['Se after work-menyn','https://www.lagustosa.se/afterwork/'], drinks:['Se dryckesmenyn','https://www.lagustosa.se/menyer/'] };
+  const actions = { menu:['Visa menyn','#meny'], contact:['Kontakt & öppettider','#kontakt'] };
+  const detailActions = { lunch:'Veckans lunch', weekend:'Shopping Meny', aw:'AW Meny', drinks:'Dryckesmeny' };
   if (answer?.action === 'book') { const button = document.createElement('button'); button.className='text-link'; button.textContent='Förbered en bordsförfrågan →'; button.addEventListener('click',openBooking); node.append(document.createElement('br'),button); }
-  else if (actions[answer?.action]) { const [label,href] = actions[answer.action]; const link=document.createElement('a'); link.textContent=label+' ↗'; link.href=href; link.className='text-link'; if(href.startsWith('https:')) { link.target='_blank'; link.rel='noopener'; } else link.addEventListener('click',()=> { $('#assistant-dialog').close(); if(answer.category) selectCategory(answer.category); }); node.append(document.createElement('br'),link); }
+  else if (detailActions[answer?.action]) { const button=document.createElement('button'); button.textContent=detailActions[answer.action]+' →'; button.className='text-link'; button.dataset.menuDetail=answer.action; node.append(document.createElement('br'),button); }
+  else if (actions[answer?.action]) { const [label,href] = actions[answer.action]; const link=document.createElement('a'); link.textContent=label+' →'; link.href=href; link.className='text-link'; link.addEventListener('click',()=> { $('#assistant-dialog').close(); if(answer.category) selectCategory(answer.category); }); node.append(document.createElement('br'),link); }
   const messages=$('#chat-messages'); messages.append(node); messages.scrollTop=messages.scrollHeight; return node;
 }
 async function ask(question) {

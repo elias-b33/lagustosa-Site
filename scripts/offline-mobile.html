@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>La Gustosa – mobilvy</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#e9e8e4;color:#292d29;font-family:Arial,sans-serif}header{padding:16px 22px;display:flex;justify-content:space-between;align-items:center;gap:15px;border-bottom:1px solid #d1d1c9;background:#f7f5ef}h1{font-size:16px;font-weight:600;margin:0 0 5px}p{font-size:12px;margin:0;color:#666b60;line-height:1.5}nav{display:flex;gap:8px;flex-wrap:wrap}button,a{font:inherit;font-size:12px;color:inherit;background:transparent;border:1px solid #b9beb1;padding:9px 12px;cursor:pointer;white-space:nowrap;text-decoration:none}button[aria-pressed=true]{background:#293229;color:white;border-color:#293229}main{height:calc(100dvh - 77px);min-height:280px;display:grid;place-items:center;padding:16px;overflow:hidden}.slot{position:relative}.phone{position:absolute;left:0;top:0;transform-origin:top left;width:430px;height:902px;padding:14px;border-radius:49px;background:#252725;box-shadow:0 12px 35px #0002}iframe{display:block;width:402px;height:874px;border:0;border-radius:35px;background:#f7f5ef}.phone.landscape{width:902px;height:430px}.phone.landscape iframe{width:874px;height:402px}@media(max-width:560px){header{padding:12px 14px;flex-wrap:wrap}h1{font-size:15px}main{height:calc(100dvh - 150px);padding:10px}button,a{padding:7px 11px}}
+  </style>
+</head>
+<body>
+  <header><div><h1>La Gustosa – mobilvy</h1><p id="size-label">Ungefär 6,3 tum, 402 × 874 px</p></div><nav aria-label="Förhandsvisning"><button id="portrait" aria-pressed="true">Stående</button><button id="landscape" aria-pressed="false">Liggande</button><button id="reload">Ladda om</button><a href="./STARTA-HAR.html">Datorvy</a></nav></header>
+  <main><div class="slot"><div class="phone"><iframe id="screen" src="./STARTA-HAR.html" title="La Gustosa i mobilformat"></iframe></div></div></main>
+  <script>
+    const main=document.querySelector('main'),slot=document.querySelector('.slot'),phone=document.querySelector('.phone'),screen=document.querySelector('#screen');
+    let landscape=false;
+    function fit(){const width=landscape?902:430,height=landscape?430:902,scale=Math.min(1,(main.clientWidth-28)/width,(main.clientHeight-28)/height);slot.style.width=width*scale+'px';slot.style.height=height*scale+'px';phone.style.transform='scale('+scale+')';}
+    function orient(value){landscape=value;phone.classList.toggle('landscape',value);document.querySelector('#portrait').setAttribute('aria-pressed',String(!value));document.querySelector('#landscape').setAttribute('aria-pressed',String(value));document.querySelector('#size-label').textContent='Ungefär 6,3 tum, '+(value?'874 × 402':'402 × 874')+' px';fit();}
+    document.querySelector('#portrait').addEventListener('click',()=>orient(false));document.querySelector('#landscape').addEventListener('click',()=>orient(true));document.querySelector('#reload').addEventListener('click',()=>{screen.src=screen.getAttribute('src');});
+    new ResizeObserver(fit).observe(main);fit();
+  </script>
+</body>
+</html>

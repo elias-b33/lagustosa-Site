@@ -457,7 +457,7 @@ export const menuData = {
     "email": "bokning@lagustosa.se",
     "hours": "Måndag stängt. Tisdag 11.30–sent. Onsdag och torsdag 11.30–22.00. Fredag 11.30–sent. Lördag och söndag 12.00–sent. Ring för kvällens stängningstid.",
     "lunch": "Tisdag–fredag 11.30–14.30. Dagens lunch 129 kr. Pensionär, student och dagens take away 119 kr. Sallad, hembakat bröd, smör, bordsvatten, kaffe och Tårta Margherita ingår.",
-    "weekend": "Shoppinglunch lördag–söndag 12.00–17.00 enligt shoppinglunchsidan. Rättspecifika priser finns på https://www.lagustosa.se/shoppinglunch/.",
+    "weekend": "Shoppinglunch lördag–söndag 12.00–17.00 enligt shoppinglunchsidan. Öppna Shopping Meny för rätter och priser.",
     "booking": "Bokning via telefon eller e-postförfrågan. Ett bord är inte bokat förrän restaurangen bekräftat. Inga uppgifter om lediga bord finns.",
     "allergens": "Ingen fullständig verifierad allergenlista finns. Gäster måste alltid fråga personalen. Bekräfta aldrig att en rätt är allergensäker, glutenfri, mjölkfri eller vegansk.",
     "afterwork": "After work finns. Tiderna på originalsidorna är motstridiga; hänvisa till telefon för aktuell tid."

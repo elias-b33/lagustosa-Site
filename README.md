@@ -4,6 +4,12 @@ En varsam uppdatering av https://www.lagustosa.se/. Originalets vita logotyp, re
 
 ## Köra lokalt
 
+För den färdiga testversionen behövs ingen installation: packa upp `outputs/La-Gustosa-test.zip` och dubbelklicka på `STARTA-HAR.html`. Filen innehåller bilder, typsnitt, menydata och JavaScript. `MOBILVY.html` visar samma fil i en mobilram och ska ligga i samma mapp. Paketet skapas med `node scripts/package-offline.mjs` och kan zippas med operativsystemets vanliga zip-funktion. Inga konton, serverdelar eller nycklar ingår.
+
+Dryckesmeny, veckolunch, shoppinglunch och AW visas i menyfönster på samma sida. `public/extra-menus.js` innehåller originalets kompletterande menyer; `scripts/import-extra-menus.py` återskapar dem från källkopiorna i `reference/`. Menyerna är ögonblicksbilder och behöver uppdateras när restaurangen ändrar dem. Inga länkar navigerar till den gamla webbplatsen. Kontaktlänkar använder telefon eller e-post; Hitta hit visar adressen lokalt.
+
+För utvecklingsservern:
+
 Node.js 22.13 eller senare krävs. Beroenden är låsta i package-lock.json.
 
 ```sh
@@ -65,7 +71,7 @@ Implementationen följer [OpenAI:s API-dokumentation](https://developers.openai.
 | `reference/menu-verified.json` | Källutdrag från menyimporten |
 | `reference/assets.json` | Originalfilernas storlek, dimensioner och SHA-256 |
 
-När priser eller öppettider ändras behöver innehållet uppdateras och publiceras igen. Lunchens veckorätter länkar till restaurangens uppdaterade originalmeny i stället för att använda ett snabbt inaktuellt veckoschema.
+När priser, veckolunch eller öppettider ändras behöver innehållet uppdateras och publiceras igen. Skapa också en ny offlinefil om testpaketet ska få samma ändringar.
 
 ## Kontroller
 
