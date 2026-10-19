@@ -1,5 +1,5 @@
 import { menuData } from './menu-data.js';
-import { extraMenus } from './extra-menus.js';
+import { getDetailMenu, renderDetailSections, menuPaths } from './menu-content.js';
 import { stockholmDate, bookingTimes, validateBooking, normalize, localAnswer } from './domain.js';
 
 const $ = selector => document.querySelector(selector);
@@ -72,7 +72,8 @@ $('#booking-form').addEventListener('submit', event => {
 $('#booking-back').addEventListener('click', () => { $('#booking-review').hidden = true; $('#booking-form').hidden = false; $('#booking-date').focus(); });
 
 const weekdayContent = $('#lunch-panel').innerHTML;
-const weekendContent = '<div class="lunch-price"><span>SHOPPINGLUNCH</span></div><p>Varje Lördag &amp; Söndag mellan Kl. 12.00 – 17.00 har vi vår Shoppinglunch på Sandwallsplats i Borås då vi har ett bättre pris på utvalda rätter samt dryck. Ta en paus i all shopping, eller börja dagen hos oss med dina vänner, kollegor, nära &amp; kära.</p><button class="text-link" data-menu-detail="weekend">Shopping Meny <span aria-hidden="true">→</span></button>';
+const menuHref = kind => location.protocol === 'file:' ? '#meny' : './' + menuPaths[kind];
+const weekendContent = `<div class="lunch-price"><span>SHOPPINGLUNCH</span></div><p>Varje Lördag &amp; Söndag mellan Kl. 12.00 – 17.00 har vi vår Shoppinglunch på Sandwallsplats i Borås då vi har ett bättre pris på utvalda rätter samt dryck. Ta en paus i all shopping, eller börja dagen hos oss med dina vänner, kollegor, nära &amp; kära.</p><a class="text-link" href="${menuHref('weekend')}" data-menu-detail="weekend">Shopping Meny <span aria-hidden="true">→</span></a>`;
 function selectLunch(kind) { $$('[data-lunch]').forEach(button => { button.setAttribute('aria-selected',String(button.dataset.lunch === kind)); button.tabIndex = button.dataset.lunch === kind ? 0 : -1; }); $('#lunch-panel').innerHTML = kind === 'weekend' ? weekendContent : weekdayContent; $('#lunch-panel').setAttribute('aria-labelledby',kind+'-tab'); }
 $$('[data-lunch]').forEach(button => button.addEventListener('click', () => selectLunch(button.dataset.lunch)));
 $('.occasion-tabs').addEventListener('keydown',event => tabKeys(event,'[data-lunch]',button => selectLunch(button.dataset.lunch)));
@@ -82,13 +83,13 @@ const menuDetailViews = new Map();
 function getMenuDetailView(kind) {
   if (!menuDetailViews.has(kind)) {
     const view = document.createElement('div');
-    view.innerHTML = extraMenus[kind].sections.map(section => `<section class="detail-section"><h3>${escape(section.title)}</h3>${section.items ? section.items.map(item => `<article class="detail-item"><div class="detail-item-heading"><h4>${escape(item.name)}</h4>${item.priceLabel ? `<span>${escape(item.priceLabel)}</span>` : ''}</div>${item.description ? `<p>${escape(item.description)}</p>` : ''}</article>`).join('') : section.paragraphs.map(text => `<p>${escape(text)}</p>`).join('')}</section>`).join('');
+    view.innerHTML = renderDetailSections(getDetailMenu(kind));
     menuDetailViews.set(kind, view);
   }
   return menuDetailViews.get(kind);
 }
 function openMenuDetail(kind) {
-  const menu = extraMenus[kind]; if (!menu) return;
+  const menu = getDetailMenu(kind); if (!menu) return;
   const fromGuide = $('#assistant-dialog').open;
   if (fromGuide) $('#assistant-dialog').close();
   const dialog = $('#menu-detail-dialog');
@@ -107,7 +108,7 @@ function openMenuDetail(kind) {
 // Delegation also covers buttons rendered in lunch tabs and quick-guide content.
 document.addEventListener('click', event => {
   const menuButton = event.target.closest('[data-menu-detail]');
-  if (menuButton) { event.preventDefault(); openMenuDetail(menuButton.dataset.menuDetail); }
+  if (menuButton && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey && event.button === 0) { event.preventDefault(); openMenuDetail(menuButton.dataset.menuDetail); }
 });
 $('#menu-detail-dialog').addEventListener('close', () => {
   if ($('#menu-detail-dialog').dataset.returnToGuide === 'true') openDialog($('#assistant-dialog'));
@@ -145,6 +146,7 @@ $$('[data-guide-topic]').forEach(button => button.addEventListener('click', () =
 }));
 $('#guide-content').addEventListener('click', event => {
   const link = event.target.closest('a[href^="#"]'); if (!link) return;
+  if (link.hasAttribute('data-menu-detail')) return;
   if (link.dataset.guideCategory) selectCategory(link.dataset.guideCategory);
   $('#assistant-dialog').close();
 });

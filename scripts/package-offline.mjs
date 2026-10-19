@@ -3,6 +3,8 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {build} from 'esbuild';
 import assert from 'node:assert/strict';
+import { generateSeo } from './generate-seo.mjs';
+import { menuPaths } from '../public/menu-content.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const source = path.join(root, 'public');
@@ -19,7 +21,12 @@ async function dataUrl(file) {
   }
   return embedded.get(file);
 }
+await generateSeo();
 let html = await readFile(path.join(source, 'index.html'), 'utf8');
+// The double-click copy keeps menu navigation inside the same self-contained file.
+for (const menuPath of Object.values(menuPaths)) html = html.replaceAll(`href="./${menuPath}"`, 'href="#meny"');
+html = html.replace(/\s*<link rel="canonical"[^>]*>/g, '')
+  .replace(/\s*<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '');
 for (const match of [...html.matchAll(/(?:src|href)="(\.\/assets\/[^"?#]+)"/g)]) {
   if (match[1].endsWith('.css')) continue;
   html = html.replaceAll(match[1], await dataUrl(path.resolve(source, match[1])));

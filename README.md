@@ -75,8 +75,18 @@ När priser, veckolunch eller öppettider ändras behöver innehållet uppdatera
 
 ## Kontroller
 
+### SEO och AI-sökning
+
+`node scripts/generate-seo.mjs` uppdaterar metadata, restaurangdata i JSON-LD, startsidans första meny och fem fullständiga HTML-menyer. Det körs också automatiskt före utvecklingsservern, bygget och offlinepaketeringen. Innehållet kommer från samma menydata som de interaktiva menyerna. Vanliga klick öppnar fortfarande menyfönstren; länkarna fungerar också som vanliga sidor utan JavaScript.
+
+Förhandsvisningen är privat och behåller `noindex` samt en blockerande `robots.txt`. Det är ingen offentlig SEO-lansering. Kör `node scripts/generate-seo.mjs --production` för att skapa `outputs/La-Gustosa-webbplats/`, en statisk webbplats avsedd för **https://www.lagustosa.se/**. Där aktiveras indexering, sitemap och åtkomst för vanliga sökrobotar samt OAI-SearchBot. Canonical-adresserna pekar på restaurangens riktiga domän. Webbpaketet ska publiceras via en webbserver, inte användas som dubbelklicksversion. Originalwebbplatsen och dess DNS ändras inte av kommandot.
+
+Menysidorna behåller originalets viktiga adresser `/menyer/`, `/dagens-lunch/`, `/shoppinglunch/` och `/afterwork/`; `/dryckesmeny/` tillkommer. Uppdatera `public/menu-data.js` och `public/extra-menus.js` när restaurangen ändrar menyerna och generera om. Öppettiderna återges som originalets text. Strukturerade stängningstider utelämnas eftersom flera dagar bara anger ”sent”. Betyg, recensioner, koordinater och lediga bord har inte hittats på.
+
+Läs `SEO-LANSERING.txt` före publicering på restaurangens domän. SEO och tillåtna sökrobotar ger ingen garanti om indexering, placering eller AI-rekommendationer.
+
 ```sh
-node --test scripts/verify.test.mjs
+node --test scripts/verify.test.mjs scripts/seo.test.mjs
 node node_modules/typescript/bin/tsc --noEmit
 node scripts/run-framework.mjs build
 ```

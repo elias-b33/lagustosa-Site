@@ -1,0 +1,49 @@
+LA GUSTOSA – SEO OCH SYNLIGHET I AI-SÖKNING
+Förberett 19 oktober 2026 för https://www.lagustosa.se/
+
+Genomfört i den nya webbplatsen
+
+Sidtitlar och beskrivningar för restaurang, meny, lunch, shoppinglunch, after work och dryckesmeny. Canonical-adresser och delningsmetadata med originalbilden. Restaurant, WebSite, WebPage, Menu och BreadcrumbList som JSON-LD. Alla menyer kan läsas direkt i HTML utan JavaScript, och vanliga länkar leder mellan sidorna. Innehållet kommer från samma menydata som menyfönstren. Inga betyg eller recensioner har lagts in i strukturerad data.
+
+Två olika paket
+
+La-Gustosa-test.zip är en privat dubbelklicksversion för vännen. Packa upp och öppna STARTA-HAR.html. Den är inte avsedd att indexeras.
+
+La-Gustosa-webbplats.zip innehåller en statisk webbplats avsedd att ersätta den nuvarande webbplatsen på www.lagustosa.se. Den behöver ett vanligt webbhotell med HTTPS och index.html för katalogadresser. Lägg själva innehållet i webbplatsens rot, inte mappen ovanför. Ta först en återställningsbar kopia av den befintliga webbplatsen. Inga domäninställningar, Google-konton eller WordPress-filer har ändrats i detta arbete. Paketet har ingen AI-server eller automatiskt bokningssystem; befintlig snabbguide och e-postförfrågan fungerar i webbläsaren.
+
+Före offentlig lansering
+
+1. Restaurangen behöver bekräfta aktuella priser, veckolunch och öppettider. Originalets olika sidor anger olika tider för vissa erbjudanden. Flera stängningstider är bara ”sent”; därför anges inga exakta stängningstider i JSON-LD. Bekräfta dem innan öppettidsdata läggs till.
+2. Använd en huvuddomän: https://www.lagustosa.se/. Omdirigera HTTP och domänen utan www permanent till denna, utan att förlora sökvägar. Viktiga ursprungliga adresser är bevarade: /menyer/, /dagens-lunch/, /shoppinglunch/ och /afterwork/. Kontrollera övriga gamla adresser i WordPress/Search Console och gör 301-omdirigeringar till närmast motsvarande sida. Exempel: /om-oss/ till /#om-oss och /galleri/ till /#galleri, om dessa är de nuvarande adresserna.
+3. Kontrollera att startsidan och alla fem menysidor ger HTTP 200, fungerar utan inloggning och saknar noindex i både HTML och HTTP-headers. Webbpaketets robots.txt tillåter sökrobotar och OAI-SearchBot och hänvisar till sitemap.xml. Brandvägg eller botfilter hos webbhotellet får inte blockera sökroboternas riktiga anrop. robots.txt är ingen åtkomstkontroll för privata uppgifter.
+4. Verifiera domänen i Google Search Console och Bing Webmaster Tools. Skicka in https://www.lagustosa.se/sitemap.xml och kontrollera indexering av startsidan och menysidorna. Använd Rich Results Test för Restaurant-data efter lanseringen. Följ även Google Search Consoles inställningar/rapport för generativ AI där de är tillgängliga för kontot.
+
+För lokala rekommendationer i Borås
+
+Ägaren bör verifiera och uppdatera den befintliga Google-företagsprofilen: korrekt verksamhetskategori, adress, telefon, webbplats, menyer, ordinarie och avvikande öppettider samt aktuella originalbilder. Håll samma uppgifter hos exempelvis Bing Places och Apple Business Connect. Kategorier ska beskriva den faktiska verksamheten. Lägg inte sökord i företagsnamnet.
+
+Be gäster om ärliga recensioner och svara sakligt. Omdömen, riktiga lokala omnämnanden och länkar är saker kodändringar inte kan skapa åt restaurangen. Köp inte recensioner och skriv inte påhittade rekommendationer. Google anger relevans, avstånd och popularitet som centrala faktorer för lokala resultat. Ingen kan garantera att restaurangen visas först när någon ber en AI om en bra restaurang i Borås.
+
+Mätning efter lanseringen
+
+Spara en utgångspunkt i Search Console vid lanseringen. Följ därefter hur relevanta sökningar utvecklas, till exempel italiensk restaurang Borås, lunch Borås, pasta Borås och after work Borås. Följ även samtal, webbplatsklick och vägbeskrivningar i företagsprofilen. Ett enskilt AI-svar är inte en stabil rankingmätning; svar kan variera med fråga, plats, tjänst och tid.
+
+Underhåll
+
+Uppdatera public/menu-data.js och public/extra-menus.js när menyerna ändras. Kör sedan node scripts/generate-seo.mjs och node --test scripts/seo.test.mjs. För en ny offentlig webbplatsmapp: node scripts/generate-seo.mjs --production. För ett nytt dubbelklickspaket: node scripts/package-offline.mjs. Zippa respektive mapp igen efter ändringarna.
+
+Officiella källor, kontrollerade 19 oktober 2026
+
+Google: Optimizing your website for generative AI features on Google Search
+https://developers.google.com/search/docs/fundamentals/ai-optimization-guide
+
+Google: Local Business structured data
+https://developers.google.com/search/docs/appearance/structured-data/local-business
+
+Google: Tips to improve your local ranking
+https://support.google.com/business/answer/7091
+
+OpenAI Docs: Overview of OpenAI Crawlers
+https://developers.openai.com/api/docs/bots
+
+OAI-SearchBot styr sökåtkomst för ChatGPT. GPTBot är en separat kontroll för modellträning. Någon särskild llms.txt-fil, instruktion till en AI att rekommendera restaurangen eller påhittad ”AI-ranking” används inte. Google säger uttryckligen att llms.txt inte påverkar deras sökrankning.
