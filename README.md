@@ -97,6 +97,18 @@ Sidan har även granskats i webbläsare på dator och mobil. Menyfilter, favorit
 
 ## Publicering
 
+### Vercel
+
+`vercel.json` publicerar den statiska webbplatsen från `public/`. Byggkommandot `node scripts/generate-seo.mjs` uppdaterar startsidan och menysidorna med enbart Node.js; ingen installation av ramverksberoenden behövs. Inställningarna väljer uttryckligen Vercels ramverk "Other" och rätt utdatakatalog. Det vanliga `npm run build` bygger för Sites/Cloudflare och ska inte användas för Vercel-publiceringen.
+
+Projektets Root Directory i Vercel ska vara repots rot. Den anslutna produktionsgrenen är `main`. En push dit utlöser en ny publicering. Kontrollera själva webbplatsen efteråt, inklusive `/`, `/menyer/`, `/afterwork/` och bildfilerna; en grön byggstatus räcker inte för att bekräfta att sidorna fungerar.
+
+Vercel-versionen behåller `noindex` och blockerande `robots.txt` medan den används som förhandsvisning. När den ska ersätta `www.lagustosa.se` behöver domänen kopplas in, lanseringslistan i `SEO-LANSERING.txt` följas och `vercel.json` ändras till byggkommandot `node scripts/generate-seo.mjs --production` med utdatakatalogen `outputs/La-Gustosa-webbplats`.
+
+Menyer, favoriter, snabbguide och bokningsförfrågan via gästens e-postapp fungerar statiskt. Den vilande AI-serverdelen ingår inte i Vercel-versionen; den kräver en separat serverintegration innan den kan aktiveras där.
+
+### Sites
+
 Projekt-ID och hostinginställningar finns i `.openai/hosting.json`. Webbplatsen är privat för ägaren. Den ersätter inte lagustosa.se. Använd Sites käll- och publiceringsflöde för att spara och distribuera nya versioner. Behåll `sites()`-integrationen i Vite.
 
 `public/index.html` har `noindex` eftersom detta är en privat arbetsversion. Ta bort det först när restaurangen ska lansera sin publika sida och har kontrollerat innehållet.
