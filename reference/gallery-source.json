@@ -1,0 +1,172 @@
+{
+  "source": "https://www.lagustosa.se/galleri/",
+  "checked": "2026-10-19",
+  "images": [
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_3409-1024x683.jpg",
+      "file": "IMG_3409-1024x683.jpg",
+      "width": 1024,
+      "height": 683,
+      "bytes": 95805,
+      "sha256": "6655dbd3d7b51b478e9ae9b34307e2e2c4bb868c1cdf4ecf9c4621ec9bb011c4"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_3413-683x1024.jpg",
+      "file": "IMG_3413-683x1024.jpg",
+      "width": 683,
+      "height": 1024,
+      "bytes": 86626,
+      "sha256": "a736e13013deb1e8588752e7a5202e08a3bddd093d100f3724c02c59cf61ef67"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_3418-1024x683.jpg",
+      "file": "IMG_3418-1024x683.jpg",
+      "width": 1024,
+      "height": 683,
+      "bytes": 94333,
+      "sha256": "d8efe3ae76f106ccd689624107d252f3ce183f2267d501b2bef519dadad92c39"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_3419-1024x683.jpg",
+      "file": "IMG_3419-1024x683.jpg",
+      "width": 1024,
+      "height": 683,
+      "bytes": 91496,
+      "sha256": "8b1cf8220262b5084c1f39569088388c92857f1c415df857b853e751c4bcf609"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_3421-1024x683.jpg",
+      "file": "IMG_3421-1024x683.jpg",
+      "width": 1024,
+      "height": 683,
+      "bytes": 105940,
+      "sha256": "9aef2b7c2ebdd980d8e6ad86f450ef7198cf86dc05b4f179f291c5f4fc01052b"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_3426-683x1024.jpg",
+      "file": "IMG_3426-683x1024.jpg",
+      "width": 683,
+      "height": 1024,
+      "bytes": 120650,
+      "sha256": "6d0b53c4826cbd8a6b8959e6bf3bbfc201caa4ea0f6e37b1dc4d430c77d87ea3"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_3428-1024x683.jpg",
+      "file": "IMG_3428-1024x683.jpg",
+      "width": 1024,
+      "height": 683,
+      "bytes": 28550,
+      "sha256": "f925e16b84688b8d7d8353494d8e8ad3f64ee6473ee31183e231835c8f4bba62"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_3433-1024x683.jpg",
+      "file": "IMG_3433-1024x683.jpg",
+      "width": 1024,
+      "height": 683,
+      "bytes": 158722,
+      "sha256": "2b766b77352f27739a511ea53ae71201249e5097ca5623352e3ed090da50621d",
+      "displayedAs": "public/assets/original/IMG_3433-1-e1541598266204.jpg"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_3436-683x1024.jpg",
+      "file": "IMG_3436-683x1024.jpg",
+      "width": 683,
+      "height": 1024,
+      "bytes": 37178,
+      "sha256": "6468926adf0b2fe029c05aebe03635309a3fe24ea27b6288b917a5d517054b26"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_4085-1024x768.jpg",
+      "file": "IMG_4085-1024x768.jpg",
+      "width": 1024,
+      "height": 768,
+      "bytes": 101454,
+      "sha256": "bea543c6f982a24f35daa9034b31e6b8113562f6de1819316889a04849f574df"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_4086-1024x768.jpg",
+      "file": "IMG_4086-1024x768.jpg",
+      "width": 1024,
+      "height": 768,
+      "bytes": 92315,
+      "sha256": "1a450d57b4d57e878142f01458fe1073bcdf1252b6c2549b2e5d53583ed029a8"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_4090-1024x768.jpg",
+      "file": "IMG_4090-1024x768.jpg",
+      "width": 1024,
+      "height": 768,
+      "bytes": 76119,
+      "sha256": "2c9aab06fcd465f250a0ce4dc32de679d30fa86456c48f8240bf7a5178653018"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_4092-1024x768.jpg",
+      "file": "IMG_4092-1024x768.jpg",
+      "width": 1024,
+      "height": 768,
+      "bytes": 120439,
+      "sha256": "b89c5ad819d6a8259f7b4c602e509d01630fb3183a2150f3bcf01394ae1174d5"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_4088-1024x768.jpg",
+      "file": "IMG_4088-1024x768.jpg",
+      "width": 1024,
+      "height": 768,
+      "bytes": 56453,
+      "sha256": "164a673e353fba16ac07d7a716bd36038b9a7b2ac0c911dd2c0853f695fd25cd"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_4087-1024x768.jpg",
+      "file": "IMG_4087-1024x768.jpg",
+      "width": 1024,
+      "height": 768,
+      "bytes": 74032,
+      "sha256": "eba265a009d6cc3f2d5ebeb793ed1d216419669fd2f58aded3bf0472dfd1c6ff"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_3434-683x1024.jpg",
+      "file": "IMG_3434-683x1024.jpg",
+      "width": 683,
+      "height": 1024,
+      "bytes": 176246,
+      "sha256": "0dfb34f4518d7e44ece588df8be17a2925f1af69e2685b1d396d128bfcbc0212"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_3419-1-1024x683.jpg",
+      "file": "IMG_3419-1-1024x683.jpg",
+      "width": 1024,
+      "height": 683,
+      "bytes": 91496,
+      "sha256": "8b1cf8220262b5084c1f39569088388c92857f1c415df857b853e751c4bcf609",
+      "duplicateOf": "IMG_3419-1024x683.jpg"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_3421-1-1024x683.jpg",
+      "file": "IMG_3421-1-1024x683.jpg",
+      "width": 1024,
+      "height": 683,
+      "bytes": 105940,
+      "sha256": "9aef2b7c2ebdd980d8e6ad86f450ef7198cf86dc05b4f179f291c5f4fc01052b",
+      "duplicateOf": "IMG_3421-1024x683.jpg"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_3418-1-1024x683.jpg",
+      "file": "IMG_3418-1-1024x683.jpg",
+      "width": 1024,
+      "height": 683,
+      "bytes": 94333,
+      "sha256": "d8efe3ae76f106ccd689624107d252f3ce183f2267d501b2bef519dadad92c39",
+      "duplicateOf": "IMG_3418-1024x683.jpg"
+    },
+    {
+      "source": "https://www.lagustosa.se/wp-content/uploads/2018/11/IMG_3423-1024x683.jpg",
+      "file": "IMG_3423-1024x683.jpg",
+      "width": 1024,
+      "height": 683,
+      "bytes": 117629,
+      "sha256": "fd1dac8a24dfd4410c3688e95e17b705135a069a23c02fe01f2fc3f901fd838d"
+    }
+  ],
+  "displayedCount": 19,
+  "note": "Alla 17 unika foton från originalgalleriet ingår. Tre byte-identiska dubbletter utelämnas; uteserveringen finns redan bland förhandsbilderna. Två ytterligare förhandsbilder från originalwebbplatsen ger totalt 19 bilder."
+}

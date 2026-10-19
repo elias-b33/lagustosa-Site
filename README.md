@@ -30,6 +30,7 @@ node scripts/run-framework.mjs dev --port 4177 --hostname 127.0.0.1
 - Sökning över hela menyn och lokalt sparade favoriter.
 - Bokningsförfrågan med datum, önskad tid, antal gäster och kontaktuppgifter. Måndagar, passerade datum och tider med för kort framförhållning blockeras. Gästen granskar först och skickar därefter via FormSubmit till ayush.giri2006@gmail.com utan att lämna sidan. Sällskap över tio anger exakt antal, tillfälle och eventuell flexibilitet i tid. Ingen bokning bekräftas automatiskt. Den lokala dubbelklickskopian använder gästens e-postapp.
 - Mobilnavigation, lunchflikar, bildgalleri, tangentbordsnavigering, reducerad rörelse samt kontakt- och kartlänkar.
+- Galleriet visar tre bilder först och ytterligare 16 via Visa fler bilder. Alla unika foton från originalets galleri ingår tillsammans med de tidigare utvalda bilderna. Exakta dubbletter visas bara en gång. Bilderna är oförändrade originalfiler, laddas vid behov och kan öppnas i bildvisaren. Visa färre bilder finns både över och under den utökade delen. Utvikningen fungerar även utan JavaScript.
 - Snabbguide med klickval för pasta, pizza under 190 kr, dagens lunch, bar & alkohol, öppettider och bokning. Den visar fasta uppgifter och menydata utan AI-anrop eller fritextfält.
 - Färdig serveranslutning till OpenAI Responses API. API-nyckeln stannar på servern.
 
@@ -82,6 +83,7 @@ Implementationen följer [OpenAI:s API-dokumentation](https://developers.openai.
 | `build/sites-worker.ts` | Sites Worker med AI-routning framför Vinext |
 | `reference/menu-verified.json` | Källutdrag från menyimporten |
 | `reference/assets.json` | Originalfilernas storlek, dimensioner och SHA-256 |
+| `reference/gallery-source.json` | Galleriets originaladresser, dimensioner, SHA-256 och dokumenterade dubbletter |
 
 När priser, veckolunch eller öppettider ändras behöver innehållet uppdateras och publiceras igen. Skapa också en ny offlinefil om testpaketet ska få samma ändringar.
 

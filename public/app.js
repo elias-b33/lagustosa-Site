@@ -194,6 +194,15 @@ $('#menu-detail-dialog').addEventListener('close', () => {
 });
 $('#directions-open').addEventListener('click', () => openDialog($('#directions-dialog')));
 
+const galleryMore = $('#gallery-more');
+galleryMore.addEventListener('toggle', () => {
+  $('#gallery-toggle-label').textContent = galleryMore.open ? 'Visa färre bilder' : 'Visa fler bilder';
+  $('#gallery-toggle-icon').textContent = galleryMore.open ? '−' : '+';
+});
+$('#gallery-collapse').addEventListener('click', () => {
+  galleryMore.open = false;
+  galleryMore.querySelector('summary').focus();
+});
 const photos = $$('[data-gallery]').map(button => ({ src:button.querySelector('img').src, alt:button.querySelector('img').alt, title:button.querySelector('img').alt }));
 let photoIndex = 0;
 function showPhoto(index) { photoIndex = (index+photos.length)%photos.length; const photo = photos[photoIndex]; $('#gallery-large').src=photo.src; $('#gallery-large').alt=photo.alt; $('#gallery-caption').textContent=`${photo.title} — ${photoIndex+1} / ${photos.length}`; }
