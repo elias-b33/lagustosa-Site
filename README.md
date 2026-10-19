@@ -73,6 +73,10 @@ Implementationen följer [OpenAI:s API-dokumentation](https://developers.openai.
 
 När priser, veckolunch eller öppettider ändras behöver innehållet uppdateras och publiceras igen. Skapa också en ny offlinefil om testpaketet ska få samma ändringar.
 
+Lunchdelen visar dagens fem rätter direkt från veckoschemat i `public/extra-menus.js`. `public/daily-lunch.js` väljer dag med tidszonen Europe/Stockholm, även om besökaren är utomlands. Tisdag–fredag visas dagens rätter; på måndagar visas stängt och nästa tisdags lunch, och på helgen väljs Shoppinglunch. En öppen sida kontrollerar dagbytet varje minut och när fliken blir aktiv igen. Snabbguidens lunchval använder samma innehåll. Veckans lunch kan fortfarande öppnas för att se alla dagar.
+
+Dagbytet sker automatiskt utan AI, server eller ompublicering. Själva veckoschemat är däremot sparat innehåll: nya rätter och priser måste uppdateras när restaurangen ändrar menyn. Funktionen hämtar inte ändringar från den gamla webbplatsen.
+
 ## Kontroller
 
 ### SEO och AI-sökning
@@ -91,7 +95,7 @@ node node_modules/typescript/bin/tsc --noEmit
 node scripts/run-framework.mjs build
 ```
 
-Nio automatiska tester täcker menydata, Stockholmsdatum, måndagsstängt, bokningsvalidering, prissökning, allergisvar, avstängd AI, ursprungskontroll, storleksgräns och simulerade API-svar/fel. Den riktiga modellanslutningen behöver provas efter aktivering.
+16 automatiska tester täcker menydata, SEO, lunchens dagbyte i svensk sommar- och vintertid, måndagsstängt, helglunch, bokningsvalidering, prissökning, allergisvar, avstängd AI, ursprungskontroll, storleksgräns och simulerade API-svar/fel. Den riktiga modellanslutningen behöver provas efter aktivering.
 
 Sidan har även granskats i webbläsare på dator och mobil. Menyfilter, favoriter, mobilnavigation, bokningsgranskning och galleri har provats. Snabbguidens sex val, prisgränsen för pizza, övergången till bokningsformuläret samt att chattfält och chatthistorik är dolda har kontrollerats. Inga bokningsmeddelanden har skickats.
 

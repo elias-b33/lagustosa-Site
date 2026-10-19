@@ -1,6 +1,7 @@
 import { menuData } from './menu-data.js';
 import { getDetailMenu, renderDetailSections, menuPaths } from './menu-content.js';
 import { stockholmDate, bookingTimes, validateBooking, normalize, localAnswer } from './domain.js';
+import { getDailyLunch, renderDailyLunch } from './daily-lunch.js';
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
@@ -72,12 +73,28 @@ $('#booking-form').addEventListener('submit', event => {
 $('#booking-back').addEventListener('click', () => { $('#booking-review').hidden = true; $('#booking-form').hidden = false; $('#booking-date').focus(); });
 
 const weekdayContent = $('#lunch-panel').innerHTML;
+const weekdayLunchContent = (now = new Date()) => weekdayContent.replace(/<!-- lunch:daily:start -->[\s\S]*?<!-- lunch:daily:end -->/, renderDailyLunch(now));
 const menuHref = kind => location.protocol === 'file:' ? '#meny' : './' + menuPaths[kind];
 const weekendContent = `<div class="lunch-price"><span>SHOPPINGLUNCH</span></div><p>Varje Lördag &amp; Söndag mellan Kl. 12.00 – 17.00 har vi vår Shoppinglunch på Sandwallsplats i Borås då vi har ett bättre pris på utvalda rätter samt dryck. Ta en paus i all shopping, eller börja dagen hos oss med dina vänner, kollegor, nära &amp; kära.</p><a class="text-link" href="${menuHref('weekend')}" data-menu-detail="weekend">Shopping Meny <span aria-hidden="true">→</span></a>`;
-function selectLunch(kind) { $$('[data-lunch]').forEach(button => { button.setAttribute('aria-selected',String(button.dataset.lunch === kind)); button.tabIndex = button.dataset.lunch === kind ? 0 : -1; }); $('#lunch-panel').innerHTML = kind === 'weekend' ? weekendContent : weekdayContent; $('#lunch-panel').setAttribute('aria-labelledby',kind+'-tab'); }
+function selectLunch(kind, now = new Date()) { $$('[data-lunch]').forEach(button => { button.setAttribute('aria-selected',String(button.dataset.lunch === kind)); button.tabIndex = button.dataset.lunch === kind ? 0 : -1; }); $('#lunch-panel').innerHTML = kind === 'weekend' ? weekendContent : weekdayLunchContent(now); $('#lunch-panel').setAttribute('aria-labelledby',kind+'-tab'); }
 $$('[data-lunch]').forEach(button => button.addEventListener('click', () => selectLunch(button.dataset.lunch)));
 $('.occasion-tabs').addEventListener('keydown',event => tabKeys(event,'[data-lunch]',button => selectLunch(button.dataset.lunch)));
 $$('[data-occasion]').forEach(link => link.addEventListener('click', () => selectLunch(link.dataset.occasion)));
+let lunchDate = stockholmDate();
+selectLunch(getDailyLunch().kind);
+function refreshLunchDay() {
+  const now = new Date(), date = stockholmDate(now);
+  if (date === lunchDate) return;
+  lunchDate = date;
+  selectLunch(getDailyLunch(now).kind, now);
+  if ($('[data-guide-topic="lunch"]').getAttribute('aria-pressed') === 'true') {
+    $('#guide-content').innerHTML = '<h3 id="guide-topic-title">Dagens lunch</h3>' + (getDailyLunch(now).kind === 'weekend' ? weekendContent : weekdayLunchContent(now));
+  }
+}
+// Recheck on a new day and after a suspended/background tab returns. No reload needed.
+setInterval(() => { if (!document.hidden) refreshLunchDay(); }, 60000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshLunchDay(); });
+window.addEventListener('focus', refreshLunchDay);
 
 const menuDetailViews = new Map();
 function getMenuDetailView(kind) {
@@ -132,7 +149,7 @@ function guideDishes(kind) {
 const guideSections = {
   pasta: { title:'Pasta', html:() => guideDishes('pasta') },
   pizza: { title:'Pizza under 190 kr', html:() => guideDishes('pizza') },
-  lunch: { title:'Dagens lunch', html:() => weekdayContent },
+  lunch: { title:'Dagens lunch', html:() => getDailyLunch().kind === 'weekend' ? weekendContent : weekdayLunchContent() },
   bar: { title:'Bar & alkohol', html:() => $('#guide-bar-content').innerHTML },
   hours: { title:'Öppettider', html:() => $('.hours dl').outerHTML + '<a class="text-link" href="#kontakt">Kontakt & hitta hit <span aria-hidden="true">→</span></a>' },
 };

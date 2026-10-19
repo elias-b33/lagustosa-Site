@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { menuData } from '../public/menu-data.js';
 import { bookingTimes, validateBooking, stockholmDate, localAnswer } from '../public/domain.js';
 import { handleAssistant } from '../lib/restaurant-assistant.mjs';
+import { getDailyLunch, renderDailyLunch } from '../public/daily-lunch.js';
+import { getDetailMenu } from '../public/menu-content.js';
 
 const now = new Date('2026-10-18T10:00:00Z');
 test('The complete imported menu has unique IDs and numeric prices', () => {
@@ -16,6 +18,55 @@ test('Bookings respect Stockholm midnight, Monday closure and lead time', () => 
   assert.deepEqual(bookingTimes('2026-10-17',now),[]);
   assert.equal(bookingTimes('2026-10-18',now)[0],'13:00');
   assert.equal(bookingTimes('2026-10-20',now)[0],'11:30');
+});
+
+test('Lunch selects the original dishes for each service day without changing the text', () => {
+  for (const [date, day, firstDish] of [
+    ['2026-10-20', 'Tisdag', 'Linguine con Bolognese'],
+    ['2026-10-21', 'Onsdag', 'Pasta Salmone'],
+    ['2026-10-22', 'Torsdag', 'Pasta alla Amatriciana'],
+    ['2026-10-23', 'Fredag', 'Pasta Carbonara'],
+  ]) {
+    const instant = new Date(`${date}T10:00:00Z`);
+    const lunch = getDailyLunch(instant);
+    assert.equal(lunch.kind, 'weekday');
+    assert.equal(lunch.serviceDate, date);
+    assert.equal(lunch.notice, '');
+    assert.match(lunch.heading, /^Idag,/);
+    assert.equal(lunch.dishes.length, 5);
+    assert(lunch.dishes[0].startsWith(firstDish));
+    assert.deepEqual(lunch.dishes, getDetailMenu('lunch').sections.find(section => section.title === day).paragraphs);
+    assert(renderDailyLunch(instant).includes(firstDish));
+  }
+});
+
+test('Closed Mondays show the next lunch and weekends select shoppinglunch', () => {
+  const monday = getDailyLunch(new Date('2026-10-19T12:00:00Z'));
+  assert.match(monday.notice, /stängt/);
+  assert.match(monday.heading, /^Nästa lunch, tisdag 20 oktober/);
+  assert.equal(monday.serviceDate, '2026-10-20');
+  for (const date of ['2026-10-24', '2026-10-25']) {
+    const weekend = getDailyLunch(new Date(`${date}T12:00:00Z`));
+    assert.equal(weekend.kind, 'weekend');
+    assert.equal(weekend.serviceDate, '2026-10-27');
+    assert.match(weekend.notice, /shoppinglunch/);
+    assert.doesNotMatch(weekend.heading, /^Idag/);
+  }
+});
+
+test('Lunch switches at Stockholm midnight across both daylight-saving offsets', () => {
+  for (const [before, after, expectedDate, expectedFirst] of [
+    ['2026-10-20T21:59:59Z', '2026-10-20T22:00:00Z', '2026-10-21', 'Pasta Salmone'],
+    ['2026-10-27T22:59:59Z', '2026-10-27T23:00:00Z', '2026-10-28', 'Pasta Salmone'],
+  ]) {
+    assert.notEqual(getDailyLunch(new Date(before)).date, expectedDate);
+    const lunch = getDailyLunch(new Date(after));
+    assert.equal(lunch.date, expectedDate);
+    assert(lunch.dishes[0].startsWith(expectedFirst));
+  }
+  assert.equal(getDailyLunch(new Date('2026-10-23T22:00:00Z')).kind, 'weekend');
+  assert.match(getDailyLunch(new Date('2026-10-25T23:00:00Z')).notice, /stängt/);
+  assert.match(getDailyLunch(new Date('2026-03-29T22:00:00Z')).notice, /stängt/);
 });
 test('Booking review cannot accept closed dates or unavailable request slots', () => {
   const values={date:'2026-10-20',time:'18:00',name:'Testgäst',phone:'0700000000',email:'test@example.com'};
