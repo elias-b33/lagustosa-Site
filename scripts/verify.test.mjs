@@ -69,7 +69,7 @@ test('Lunch switches at Stockholm midnight across both daylight-saving offsets',
   assert.match(getDailyLunch(new Date('2026-03-29T22:00:00Z')).notice, /stängt/);
 });
 test('Booking review cannot accept closed dates or unavailable request slots', () => {
-  const values={date:'2026-10-20',time:'18:00',name:'Testgäst',phone:'0700000000',email:'test@example.com'};
+  const values={date:'2026-10-20',time:'18:00',guests:'2',name:'Testgäst',phone:'0700000000',email:'test@example.com'};
   assert.equal(validateBooking(values,now),'');
   assert.match(validateBooking({...values,date:'2026-10-19'},now),/måndagar/);
   assert.match(validateBooking({...values,time:'03:00'},now),/tiderna/);

@@ -28,10 +28,22 @@ node scripts/run-framework.mjs dev --port 4177 --hostname 127.0.0.1
 
 - 45 rätter i åtta kategorier med priser från originalets à la carte-meny.
 - Sökning över hela menyn och lokalt sparade favoriter.
-- Bokningsförfrågan med datum, önskad tid, antal gäster och kontaktuppgifter. Måndagar, passerade datum och tider med för kort framförhållning blockeras. Formuläret skapar ett granskningsbart mailto-utkast. Gästen skickar själv från sin e-postapp; ingen bokning bekräftas automatiskt.
+- Bokningsförfrågan med datum, önskad tid, antal gäster och kontaktuppgifter. Måndagar, passerade datum och tider med för kort framförhållning blockeras. Gästen granskar först och skickar därefter via FormSubmit till ayush.giri2006@gmail.com utan att lämna sidan. Sällskap över tio anger exakt antal, tillfälle och eventuell flexibilitet i tid. Ingen bokning bekräftas automatiskt. Den lokala dubbelklickskopian använder gästens e-postapp.
 - Mobilnavigation, lunchflikar, bildgalleri, tangentbordsnavigering, reducerad rörelse samt kontakt- och kartlänkar.
 - Snabbguide med klickval för pasta, pizza under 190 kr, dagens lunch, bar & alkohol, öppettider och bokning. Den visar fasta uppgifter och menydata utan AI-anrop eller fritextfält.
 - Färdig serveranslutning till OpenAI Responses API. API-nyckeln stannar på servern.
+
+## Bokningsförfrågningar
+
+Webbversionen skickar direkt med FormSubmit AJAX efter gästens uttryckliga klick på Skicka förfrågan. Mottagaren är **ayush.giri2006@gmail.com** och gästens e-post sätts som Reply-To, så mottagaren kan svara direkt. Tillfället, önskad tid, exakt antal gäster, kontaktuppgifter och önskemål ingår. Sällskap över tio märks som gruppförfrågningar. Antalsfältets tekniska gräns på 999 är ingen uppgift om restaurangens kapacitet. Restaurangen bedömer plats, tid, meny och upplägg manuellt.
+
+FormSubmit kräver att mottagaren aktiverar formuläret via ett mejl innan leverans. Aktiveringsbegäran för https://lagustosasite.vercel.app/ gjordes 19 oktober 2026. Användaren uppgav aktivering, men det efterföljande tekniska testet fick fortfarande svaret att aktivering krävs. Mottagaren har ombetts slutföra aktiveringen via det senaste mejlet; ett accepterat testutskick återstår. Kontrollera formulärets aktivering och ett tydligt märkt testutskick när mottagare eller domän ändras, även inför flytt till lagustosa.se. Ingen API-nyckel eller Gmail-inloggning finns i koden. Se [FormSubmit-dokumentationen](https://formsubmit.co/documentation).
+
+Svar från tjänsten måste uttryckligen ange success=true innan sidan visar Förfrågan skickad. Detta betyder att tjänsten tagit emot förfrågan, inte att bordet är bokat eller att mejlet säkert ligger i inkorgen. Aktiveringsfel och avslag visas som fel med e-post och telefon som alternativ. Timeout och nätverksfel kan vara tvetydiga; inga automatiska omförsök görs och gästen ombeds ringa före nytt försök. Skicka-knappen spärras under pågående sändning. Ett dolt honeypotfält kompletterar tjänstens spamskydd.
+
+Bokningsuppgifter hålls bara i sidans minne fram till skickandet och skrivs inte till localStorage. FormSubmit förmedlar uppgifterna och anger 30 dagars lagring av inskickade förfrågningar. Detta beskrivs vid skickandet och under Dina uppgifter. Den självständiga testfilen har nätverksspärr och använder enbart ett granskningsbart mejlutkast till samma mottagare.
+
+Logiken finns i public/booking.js, datum- och antalsregler i public/domain.js och gränssnittet i public/index.html och public/app.js. Webbplatsen tillhandahåller inga uppgifter om lediga bord, bordsplaceringar, gruppkapacitet eller betalningar.
 
 ## Chatten är dold tills vidare
 
@@ -90,14 +102,14 @@ Menysidorna behåller originalets viktiga adresser `/menyer/`, `/dagens-lunch/`,
 Läs `SEO-LANSERING.txt` före publicering på restaurangens domän. SEO och tillåtna sökrobotar ger ingen garanti om indexering, placering eller AI-rekommendationer.
 
 ```sh
-node --test scripts/verify.test.mjs scripts/seo.test.mjs
+node --test scripts/verify.test.mjs scripts/seo.test.mjs scripts/booking.test.mjs
 node node_modules/typescript/bin/tsc --noEmit
 node scripts/run-framework.mjs build
 ```
 
-16 automatiska tester täcker menydata, SEO, lunchens dagbyte i svensk sommar- och vintertid, måndagsstängt, helglunch, bokningsvalidering, prissökning, allergisvar, avstängd AI, ursprungskontroll, storleksgräns och simulerade API-svar/fel. Den riktiga modellanslutningen behöver provas efter aktivering.
+22 automatiska tester täcker menydata, SEO, lunchens dagbyte i svensk sommar- och vintertid, måndagsstängt, helglunch, bokningsvalidering, prissökning, allergisvar, avstängd AI, ursprungskontroll, storleksgräns och simulerade API-svar/fel. Den riktiga modellanslutningen behöver provas efter aktivering.
 
-Sidan har även granskats i webbläsare på dator och mobil. Menyfilter, favoriter, mobilnavigation, bokningsgranskning och galleri har provats. Snabbguidens sex val, prisgränsen för pizza, övergången till bokningsformuläret samt att chattfält och chatthistorik är dolda har kontrollerats. Inga bokningsmeddelanden har skickats.
+Sidan har även granskats i webbläsare på dator och mobil. Menyfilter, favoriter, mobilnavigation, bokningsgranskning och galleri har provats. Snabbguidens sex val, prisgränsen för pizza, övergången till bokningsformuläret samt att chattfält och chatthistorik är dolda har kontrollerats. Bokningsflödet har provats med testuppgifter utan att registrera något verkligt besök. Ett separat aktiveringsmeddelande har skickats till den mottagaradress användaren angav.
 
 ## Publicering
 
@@ -109,7 +121,7 @@ Projektets Root Directory i Vercel ska vara repots rot. Den anslutna produktions
 
 Vercel-versionen behåller `noindex` och blockerande `robots.txt` medan den används som förhandsvisning. När den ska ersätta `www.lagustosa.se` behöver domänen kopplas in, lanseringslistan i `SEO-LANSERING.txt` följas och `vercel.json` ändras till byggkommandot `node scripts/generate-seo.mjs --production` med utdatakatalogen `outputs/La-Gustosa-webbplats`.
 
-Menyer, favoriter, snabbguide och bokningsförfrågan via gästens e-postapp fungerar statiskt. Den vilande AI-serverdelen ingår inte i Vercel-versionen; den kräver en separat serverintegration innan den kan aktiveras där.
+Menyer, favoriter, snabbguide och bokningsförfrågan via FormSubmit fungerar från den statiska webbplatsen. Den vilande AI-serverdelen ingår inte i Vercel-versionen; den kräver en separat serverintegration innan den kan aktiveras där.
 
 ### Sites
 

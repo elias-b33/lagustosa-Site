@@ -5,8 +5,19 @@ export function stockholmDate(now = new Date()) {
   return ['year', 'month', 'day'].map(type => parts.find(p => p.type === type).value).join('-');
 }
 
+function isBookingDate(date) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date || '')) return false;
+  const parsed = new Date(`${date}T12:00:00Z`);
+  return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === date;
+}
+
+export function bookingGuestCount(values) {
+  const value = String(values.guests === 'group' ? values.groupSize ?? '' : values.guests ?? '').trim();
+  return /^\d{1,3}$/.test(value) ? Number(value) : NaN;
+}
+
 export function bookingTimes(date, now = new Date()) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return [];
+  if (!isBookingDate(date)) return [];
   const day = new Date(`${date}T12:00:00Z`).getUTCDay();
   if (day === 1 || date < stockholmDate(now)) return [];
   let start = day === 0 || day === 6 ? 12 * 60 : 11 * 60 + 30;
@@ -21,10 +32,13 @@ export function bookingTimes(date, now = new Date()) {
 
 export function validateBooking(values, now = new Date()) {
   const limit = new Date(now); limit.setUTCDate(limit.getUTCDate() + 180);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(values.date) || values.date < stockholmDate(now) || values.date > stockholmDate(limit)) return 'Välj ett datum från idag och högst sex månader framåt.';
+  if (!isBookingDate(values.date) || values.date < stockholmDate(now) || values.date > stockholmDate(limit)) return 'Välj ett datum från idag och högst sex månader framåt.';
   if (new Date(`${values.date}T12:00:00Z`).getUTCDay() === 1) return 'Vi har stängt på måndagar. Välj gärna en annan dag.';
   if (!bookingTimes(values.date, now).includes(values.time)) return 'Välj en av de önskade tiderna. För bokning med kort varsel, ring oss.';
+  const guests = bookingGuestCount(values);
+  if (!Number.isInteger(guests) || guests < (values.guests === 'group' ? 11 : 1) || guests > 999) return values.guests === 'group' ? 'Ange antal personer i sällskapet, minst 11. För fler än 999 personer, ring oss.' : 'Ange ett giltigt antal gäster.';
   if (!values.name?.trim() || !values.phone?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email || '')) return 'Fyll i namn, telefon och en giltig e-postadress.';
+  if (values.name.length > 100 || values.phone.length > 30 || values.email.length > 150 || (values.message || '').length > 800 || (values.occasion || '').length > 80) return 'Korta ner uppgifterna eller önskemålen och försök igen.';
   return '';
 }
 

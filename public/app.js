@@ -1,6 +1,7 @@
 import { menuData } from './menu-data.js';
 import { getDetailMenu, renderDetailSections, menuPaths } from './menu-content.js';
 import { stockholmDate, bookingTimes, validateBooking, normalize, localAnswer } from './domain.js';
+import { BOOKING_RECIPIENT, prepareBooking, sendBooking } from './booking.js';
 import { getDailyLunch, renderDailyLunch } from './daily-lunch.js';
 
 const $ = selector => document.querySelector(selector);
@@ -58,19 +59,80 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape') clos
 function openDialog(dialog) { if (!dialog.open) dialog.showModal(); }
 $$('dialog').forEach(dialog => { dialog.querySelector('[data-close]')?.addEventListener('click', () => dialog.close()); dialog.addEventListener('click', event => { if (event.target !== dialog) return; const bounds = dialog.getBoundingClientRect(); if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close(); }); });
 const booking = $('#booking-dialog');
+const onlineBooking = ['http:', 'https:'].includes(location.protocol) && !document.body.hasAttribute('data-offline-copy');
+let bookingDraft = null;
+let bookingSending = false;
+$('#booking-recipient').textContent = BOOKING_RECIPIENT;
+if (!onlineBooking) {
+  $('#booking-send').hidden = true;
+  $('#booking-delivery-note').hidden = true;
+  $('#booking-review-note').textContent = 'Öppna ditt e-postprogram och skicka förfrågan. Vänta sedan på restaurangens bekräftelse.';
+  $('#booking-email').textContent = 'Öppna i din e-postapp ↗';
+  $('#booking-privacy').textContent = 'I den här lokala kopian förbereder bokningsformuläret ett e-postmeddelande till ' + BOOKING_RECIPIENT + '. Du skickar det själv från din e-postapp. Inga bokningsuppgifter skickas direkt från testfilen eller sparas i webbläsarens lagring.';
+}
+function updateBookingGroup() {
+  const group = $('#booking-guests').value === 'group';
+  $('#booking-group').hidden = !group;
+  $('#booking-group').disabled = !group;
+  $('#booking-title').textContent = group ? 'Boka för ett sällskap' : 'Boka bord';
+  $('#booking-message-label').textContent = group ? 'Önskemål om upplägg?' : 'Något vi bör veta?';
+  $('#booking-message').placeholder = group ? 'Till exempel gemensam meny, ungefärlig budget eller önskemål om sittning' : 'Till exempel barnstol eller ett särskilt önskemål';
+}
+$('#booking-guests').addEventListener('change', updateBookingGroup);
 function refreshTimes() { const date = $('#booking-date').value; const selected = $('#booking-time').value; const times = bookingTimes(date); $('#booking-time').innerHTML = '<option value="">Välj tid</option>' + times.map(time => `<option value="${time}">${time}</option>`).join(''); if (times.includes(selected)) $('#booking-time').value = selected; $('#booking-error').textContent = date && new Date(`${date}T12:00:00Z`).getUTCDay() === 1 ? 'Vi har stängt på måndagar. Välj gärna en annan dag.' : date && !times.length ? 'För detta datum, ring oss på 072-993 99 93 eller välj en annan dag.' : ''; }
 function openBooking() { closeMobile(); if ($('#assistant-dialog').open) $('#assistant-dialog').close(); const now = new Date(), max = new Date(now); max.setUTCDate(max.getUTCDate()+180); $('#booking-date').min = stockholmDate(now); $('#booking-date').max = stockholmDate(max); if ($('#booking-date').value) refreshTimes(); openDialog(booking); }
 $$('[data-book]').forEach(button => button.addEventListener('click', openBooking));
 $('#booking-date').addEventListener('change', refreshTimes);
 $('#booking-form').addEventListener('submit', event => {
   event.preventDefault(); const values = Object.fromEntries(new FormData(event.currentTarget)); const error = validateBooking(values); if (error) { $('#booking-error').textContent = error; return; }
-  const dateLabel = new Intl.DateTimeFormat('sv-SE',{dateStyle:'full',timeZone:'UTC'}).format(new Date(`${values.date}T12:00:00Z`));
-  const summary = `${dateLabel}, kl. ${values.time}\n${values.guests} gäster\n\n${values.name.trim()}\n${values.phone.trim()}\n${values.email.trim()}${values.message.trim() ? '\n\nÖnskemål: '+values.message.trim() : ''}`;
-  $('#booking-summary').textContent = summary;
-  $('#booking-email').href = `mailto:bokning@lagustosa.se?subject=${encodeURIComponent('Bordsförfrågan '+values.date+' kl. '+values.time)}&body=${encodeURIComponent('Hej La Gustosa!\n\nJag vill gärna fråga om ett bord:\n\n'+summary+'\n\nJag inväntar er bekräftelse.\nTack!')}`;
-  $('#booking-form').hidden = true; $('#booking-review').hidden = false; $('#booking-email').focus();
+  bookingDraft = values;
+  const prepared = prepareBooking(values);
+  $('#booking-error').textContent = '';
+  $('#booking-send-error').textContent = '';
+  $('#booking-send').disabled = false;
+  $('#booking-summary').textContent = prepared.summary;
+  $('#booking-review-title').textContent = prepared.isGroup ? 'Granska gruppförfrågan' : 'Granska din förfrågan';
+  $('#booking-send').textContent = prepared.isGroup ? 'Skicka gruppförfrågan' : 'Skicka förfrågan';
+  $('#booking-email').href = prepared.mailto;
+  $('#booking-form').hidden = true; $('#booking-review').hidden = false; $('#booking-review-title').focus();
 });
-$('#booking-back').addEventListener('click', () => { $('#booking-review').hidden = true; $('#booking-form').hidden = false; $('#booking-date').focus(); });
+$('#booking-back').addEventListener('click', () => { if (bookingSending) return; $('#booking-review').hidden = true; $('#booking-form').hidden = false; $('#booking-date').focus(); });
+$('#booking-email').addEventListener('click', event => { if (bookingSending) event.preventDefault(); });
+$('#booking-send').addEventListener('click', async () => {
+  if (!bookingDraft || bookingSending || !onlineBooking) return;
+  bookingSending = true;
+  $('#booking-send').disabled = true;
+  $('#booking-back').disabled = true;
+  $('#booking-email').setAttribute('aria-disabled', 'true');
+  $('#booking-review').setAttribute('aria-busy', 'true');
+  $('#booking-send').textContent = 'Skickar…';
+  $('#booking-send-error').textContent = '';
+  const result = await sendBooking(bookingDraft, { pageUrl: location.href });
+  bookingSending = false;
+  $('#booking-back').disabled = false;
+  $('#booking-email').removeAttribute('aria-disabled');
+  $('#booking-review').removeAttribute('aria-busy');
+  const prepared = prepareBooking(bookingDraft);
+  $('#booking-send').textContent = prepared.isGroup ? 'Skicka gruppförfrågan' : 'Skicka förfrågan';
+  if (result.status === 'sent') {
+    $('#booking-sent-summary').textContent = prepared.summary;
+    $('#booking-sent-message').textContent = prepared.isGroup ? 'Tack! Vi återkommer om plats, meny och upplägg via e-post eller telefon. Ert besök är bokat först när ni fått vår bekräftelse.' : 'Tack! Vi återkommer via e-post eller telefon. Bokningen är giltig först när du fått vår bekräftelse.';
+    $('#booking-review').hidden = true;
+    $('#booking-sent').hidden = false;
+    $('#booking-sent-title').focus();
+  } else {
+    $('#booking-send-error').textContent = result.message;
+    // Do not offer an immediate retry after an ambiguous network result.
+    $('#booking-send').disabled = result.status === 'uncertain';
+  }
+});
+$('#booking-new').addEventListener('click', () => {
+  $('#booking-form').reset(); bookingDraft = null;
+  updateBookingGroup(); refreshTimes();
+  $('#booking-sent').hidden = true; $('#booking-form').hidden = false;
+  $('#booking-sent-summary').textContent = ''; $('#booking-summary').textContent = '';
+  $('#booking-date').focus();
+});
 
 const weekdayContent = $('#lunch-panel').innerHTML;
 const weekdayLunchContent = (now = new Date()) => weekdayContent.replace(/<!-- lunch:daily:start -->[\s\S]*?<!-- lunch:daily:end -->/, renderDailyLunch(now));

@@ -92,11 +92,56 @@
     <section class="reservation-band"><div class="wrap"><div><h2>Boka bord</h2><p>Ring eller maila för att boka ett bord.</p></div><button class="button button-wine" data-book>Boka bord <span aria-hidden="true">↗</span></button></div></section>
   </main>
 
-  <footer id="kontakt"><div class="footer-main wrap"><div class="footer-brand"><a href="#toppen"><img src="./assets/original/Artboard-1.svg" width="1303" height="340" alt="La Gustosa"></a><p>Benvenuti!</p><a class="text-link" href="#galleri">Se vårt galleri ↑</a></div><div><h3>Kontakt</h3><address>Sandwallsplats 7,<br>50335 Borås</address><button class="text-link" id="directions-open">Hitta hit →</button><p class="contact-subheading"><a href="tel:+46729939993">Tel. 072-9939993</a></p><br><a href="mailto:bokning@lagustosa.se">bokning@lagustosa.se</a><br><a href="mailto:info@lagustosa.se">info@lagustosa.se</a></div><div class="hours"><h3>Öppettider</h3><dl><div><dt>Måndag</dt><dd>Stängt</dd></div><div><dt>Tisdag</dt><dd>11:30-sent</dd></div><div><dt>Onsdag</dt><dd>11:30-22.00</dd></div><div><dt>Torsdag</dt><dd>11:30-22.00</dd></div><div><dt>Fredag</dt><dd>11:30-sent</dd></div><div><dt>Lördag</dt><dd>12:00-sent</dd></div><div><dt>Söndag</dt><dd>12:00-sent</dd></div></dl></div></div><div class="footer-bottom wrap"><span>© <span id="year">2026</span> La Gustosa</span><button id="privacy-open">Om dina uppgifter</button><a href="#toppen">Till toppen ↑</a></div></footer>
+  <footer id="kontakt"><div class="footer-main wrap"><div class="footer-brand"><a href="#toppen"><img src="./assets/original/Artboard-1.svg" width="1303" height="340" alt="La Gustosa"></a><p>Benvenuti!</p><a class="text-link" href="#galleri">Se vårt galleri ↑</a></div><div><h3>Kontakt</h3><address>Sandwallsplats 7,<br>50335 Borås</address><button class="text-link" id="directions-open">Hitta hit →</button><p class="contact-subheading"><a href="tel:+46729939993">Tel. 072-9939993</a></p><br><a href="mailto:ayush.giri2006@gmail.com">Bokning via e-post</a><br><a href="mailto:info@lagustosa.se">info@lagustosa.se</a></div><div class="hours"><h3>Öppettider</h3><dl><div><dt>Måndag</dt><dd>Stängt</dd></div><div><dt>Tisdag</dt><dd>11:30-sent</dd></div><div><dt>Onsdag</dt><dd>11:30-22.00</dd></div><div><dt>Torsdag</dt><dd>11:30-22.00</dd></div><div><dt>Fredag</dt><dd>11:30-sent</dd></div><div><dt>Lördag</dt><dd>12:00-sent</dd></div><div><dt>Söndag</dt><dd>12:00-sent</dd></div></dl></div></div><div class="footer-bottom wrap"><span>© <span id="year">2026</span> La Gustosa</span><button id="privacy-open">Om dina uppgifter</button><a href="#toppen">Till toppen ↑</a></div></footer>
 
   <button class="guide-launcher" data-assistant aria-label="Öppna snabbguiden"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Zm0 0v15"></path></svg><span>Snabbguide</span></button>
 
-  <dialog id="booking-dialog" class="booking-dialog" aria-labelledby="booking-title"><button class="dialog-close" data-close aria-label="Stäng bokning">×</button><h2 id="booking-title">Boka bord</h2><p class="dialog-intro">Skicka en förfrågan via e-post. Bokningen gäller när du fått en bekräftelse från oss.</p><form id="booking-form"><div class="form-row"><label>Datum<input type="date" id="booking-date" name="date" required></label><label>Önskad tid<select id="booking-time" name="time" required><option value="">Välj tid</option></select></label><label>Antal gäster<select name="guests" required><option value="2">2 gäster</option><option value="1">1 gäst</option><option value="3">3 gäster</option><option value="4">4 gäster</option><option value="5">5 gäster</option><option value="6">6 gäster</option><option value="7">7 gäster</option><option value="8">8 gäster</option><option value="9">9 gäster</option><option value="10">10 gäster</option><option value="Fler än 10">Fler än 10</option></select></label></div><div class="form-row two"><label>Ditt namn<input name="name" required autocomplete="name" maxlength="100" placeholder="För- och efternamn"></label><label>Telefon<input name="phone" type="tel" required autocomplete="tel" maxlength="30" placeholder="Ditt telefonnummer"></label></div><label>E-post<input name="email" type="email" required autocomplete="email" maxlength="150" placeholder="namn@exempel.se"></label><label>Något vi bör veta? <span class="muted">(valfritt)</span><textarea name="message" rows="2" maxlength="800" placeholder="Till exempel barnstol eller ett särskilt önskemål"></textarea></label><p class="form-error" id="booking-error" role="alert"></p><button class="button button-wine full-width" type="submit">Granska förfrågan <span aria-hidden="true">→</span></button><p class="small muted form-note">Inga uppgifter skickas när du granskar förfrågan.</p></form><div id="booking-review" hidden><h3>Din förfrågan är redo</h3><div id="booking-summary" class="booking-summary"></div><p>Öppna ditt e-postprogram, granska meddelandet och skicka det till oss. Vänta sedan på vår bokningsbekräftelse.</p><a id="booking-email" class="button button-wine full-width" href="mailto:bokning@lagustosa.se">Öppna i din e-postapp ↗</a><button class="text-link" id="booking-back">← Ändra uppgifter</button><p class="small muted">Inget e-postprogram? Ring <a href="tel:+46729939993">072-993 99 93</a>.</p></div></dialog>
+  <dialog id="booking-dialog" class="booking-dialog" aria-labelledby="booking-title">
+    <button class="dialog-close" data-close aria-label="Stäng bokning">×</button>
+    <h2 id="booking-title">Boka bord</h2>
+    <p class="dialog-intro">Skicka en förfrågan till oss. Bokningen gäller när du fått en bekräftelse från restaurangen.</p>
+    <form id="booking-form">
+      <div class="form-row">
+        <label>Datum<input type="date" id="booking-date" name="date" required></label>
+        <label>Önskad tid<select id="booking-time" name="time" required><option value="">Välj tid</option></select></label>
+        <label>Antal gäster<select id="booking-guests" name="guests" required aria-controls="booking-group"><option value="2">2 gäster</option><option value="1">1 gäst</option><option value="3">3 gäster</option><option value="4">4 gäster</option><option value="5">5 gäster</option><option value="6">6 gäster</option><option value="7">7 gäster</option><option value="8">8 gäster</option><option value="9">9 gäster</option><option value="10">10 gäster</option><option value="group">Fler än 10</option></select></label>
+      </div>
+      <fieldset id="booking-group" class="booking-group" hidden disabled>
+        <legend>Större sällskap</legend>
+        <p>Vi hjälper er gärna att planera besöket. Vi återkommer om plats, meny och upplägg innan bokningen bekräftas.</p>
+        <div class="form-row two">
+          <label>Antal personer<input id="booking-group-size" name="groupSize" type="number" inputmode="numeric" min="11" max="999" step="1" placeholder="Till exempel 30 eller 60" required></label>
+          <label>Tillfälle <span class="muted">(valfritt)</span><select name="occasion"><option value="">Välj om du vill</option><option>Företagsmiddag</option><option>Födelsedag</option><option>Familj &amp; vänner</option><option>Annat tillfälle</option></select></label>
+        </div>
+        <label class="booking-check"><input name="flexibleTime" type="checkbox" value="ja"><span>Vi kan vara flexibla med tiden</span></label>
+      </fieldset>
+      <div class="form-row two"><label>Ditt namn<input name="name" required autocomplete="name" maxlength="100" placeholder="För- och efternamn"></label><label>Telefon<input name="phone" type="tel" required autocomplete="tel" maxlength="30" placeholder="Ditt telefonnummer"></label></div>
+      <label>E-post<input name="email" type="email" required autocomplete="email" maxlength="150" placeholder="namn@exempel.se"></label>
+      <label><span id="booking-message-label">Något vi bör veta?</span> <span class="muted">(valfritt)</span><textarea id="booking-message" name="message" rows="2" maxlength="800" placeholder="Till exempel barnstol eller ett särskilt önskemål"></textarea></label>
+      <div class="booking-honey" aria-hidden="true"><label>Lämna tomt<input name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+      <p class="form-error" id="booking-error" role="alert"></p>
+      <button class="button button-wine full-width" type="submit">Granska förfrågan <span aria-hidden="true">→</span></button>
+      <p class="small muted form-note">Inga uppgifter skickas när du granskar förfrågan.</p>
+    </form>
+    <div id="booking-review" hidden>
+      <h3 id="booking-review-title" tabindex="-1">Granska din förfrågan</h3>
+      <div id="booking-summary" class="booking-summary"></div>
+      <p id="booking-review-note">Kontrollera uppgifterna och skicka sedan din förfrågan. Vi återkommer med besked via e-post eller telefon.</p>
+      <p class="booking-recipient">Skickas till <span id="booking-recipient">ayush.giri2006@gmail.com</span></p>
+      <p class="form-error" id="booking-send-error" role="alert"></p>
+      <button id="booking-send" class="button button-wine full-width" type="button">Skicka förfrågan</button>
+      <p id="booking-delivery-note" class="small muted form-note">Dina uppgifter förmedlas via FormSubmit till restaurangen. Bordet är bokat först efter vår bekräftelse.</p>
+      <div class="booking-review-links"><button class="text-link" id="booking-back" type="button">← Ändra uppgifter</button><a id="booking-email" class="text-link" href="mailto:ayush.giri2006@gmail.com">Använd din e-postapp ↗</a></div>
+      <p class="small muted">Vill du hellre ringa? <a href="tel:+46729939993">072-993 99 93</a>.</p>
+    </div>
+    <div id="booking-sent" hidden>
+      <h3 id="booking-sent-title" tabindex="-1">Förfrågan skickad</h3>
+      <p id="booking-sent-message">Tack! Vi återkommer via e-post eller telefon. Bokningen är giltig först när du fått vår bekräftelse.</p>
+      <div id="booking-sent-summary" class="booking-summary"></div>
+      <p class="small muted">Om besöket är nära i tid eller du inte får svar, ring <a href="tel:+46729939993">072-993 99 93</a>. Skicka inte samma förfrågan igen.</p>
+      <button class="text-link" id="booking-new" type="button">Gör en ny förfrågan →</button>
+    </div>
+  </dialog>
 
   <dialog id="menu-detail-dialog" class="menu-detail-dialog" aria-labelledby="menu-detail-title"><header class="menu-detail-header"><h2 id="menu-detail-title" tabindex="-1"></h2><button class="dialog-close" data-close aria-label="Stäng menyn" autofocus>×</button></header><div id="menu-detail-scroll" class="menu-detail-scroll" role="region" aria-label="Menyinnehåll" tabindex="0"><p id="menu-detail-intro" class="menu-detail-intro" hidden></p><div id="menu-detail-content"></div><p class="menu-detail-footer"># Vid allergier fråga personalen</p></div></dialog>
   <dialog id="directions-dialog" class="privacy-dialog" aria-labelledby="directions-title"><button class="dialog-close" data-close aria-label="Stäng adress">×</button><h2 id="directions-title">Hitta hit</h2><p>La Gustosa</p><address>Sandwallsplats 7,<br>50335 Borås</address><p class="contact-subheading"><a class="text-link" href="tel:+46729939993">Tel. 072-9939993</a></p></dialog>
@@ -131,7 +176,7 @@
     </div>
   </dialog>
 
-  <dialog id="privacy-dialog" class="privacy-dialog" aria-labelledby="privacy-title"><button class="dialog-close" data-close aria-label="Stäng information">×</button><h2 id="privacy-title">Dina uppgifter</h2><p>Sparade rätter finns bara i den här webbläsaren. Sidan använder ingen analys eller reklamspårning.</p><p>Bokningsformuläret förbereder ett e-postmeddelande. Du skickar det själv från ditt e-postprogram; uppgifterna sparas inte av den här webbplatsen.</p><p id="guide-privacy">Snabbguiden visar meny och restauranginformation. Dina val hanteras i webbläsaren och skickas inte vidare.</p><button id="clear-saved" class="button button-wine">Rensa sparade rätter</button><p id="privacy-status" role="status"></p></dialog>
+  <dialog id="privacy-dialog" class="privacy-dialog" aria-labelledby="privacy-title"><button class="dialog-close" data-close aria-label="Stäng information">×</button><h2 id="privacy-title">Dina uppgifter</h2><p>Sparade rätter finns bara i den här webbläsaren. Sidan använder ingen analys eller reklamspårning.</p><p id="booking-privacy">När du klickar på Skicka förfrågan förmedlas namn, kontaktuppgifter och bokningsönskemål via FormSubmit till ayush.giri2006@gmail.com för hantering av ditt besök. FormSubmit sparar inskickade förfrågningar i upp till 30 dagar. Uppgifterna lagras inte i webbläsarens lagring. Du kan också välja att skicka från din egen e-postapp.</p><p id="guide-privacy">Snabbguiden visar meny och restauranginformation. Dina val hanteras i webbläsaren och skickas inte vidare.</p><button id="clear-saved" class="button button-wine">Rensa sparade rätter</button><p id="privacy-status" role="status"></p></dialog>
   <div class="toast" id="toast" role="status"></div>
 </body>
 </html>

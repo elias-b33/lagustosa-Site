@@ -9,7 +9,7 @@ Två olika paket
 
 La-Gustosa-test.zip är en privat dubbelklicksversion för vännen. Packa upp och öppna STARTA-HAR.html. Den är inte avsedd att indexeras.
 
-La-Gustosa-webbplats.zip innehåller en statisk webbplats avsedd att ersätta den nuvarande webbplatsen på www.lagustosa.se. Den behöver ett vanligt webbhotell med HTTPS och index.html för katalogadresser. Lägg själva innehållet i webbplatsens rot, inte mappen ovanför. Ta först en återställningsbar kopia av den befintliga webbplatsen. Inga domäninställningar, Google-konton eller WordPress-filer har ändrats i detta arbete. Paketet har ingen AI-server eller automatiskt bokningssystem; befintlig snabbguide och e-postförfrågan fungerar i webbläsaren.
+La-Gustosa-webbplats.zip innehåller en statisk webbplats avsedd att ersätta den nuvarande webbplatsen på www.lagustosa.se. Den behöver ett vanligt webbhotell med HTTPS och index.html för katalogadresser. Lägg själva innehållet i webbplatsens rot, inte mappen ovanför. Ta först en återställningsbar kopia av den befintliga webbplatsen. Inga domäninställningar, Google-konton eller WordPress-filer har ändrats i detta arbete. Paketet har ingen AI-server eller tillgång till lediga bord. Snabbguiden och bokningsförfrågningar via FormSubmit fungerar i webbläsaren. Bokningsmejlen går till ayush.giri2006@gmail.com. Verifiera formulärets aktivering och ett märkt testutskick efter domänbytet; mottagaren kan behöva bekräfta den nya domänen via FormSubmit. Restaurangen bekräftar alla bord och gruppupplägg manuellt.
 
 Före offentlig lansering
 
