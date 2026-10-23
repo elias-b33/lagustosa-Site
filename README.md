@@ -6,7 +6,7 @@ En varsam uppdatering av https://www.lagustosa.se/. Originalets vita logotyp, re
 
 För den färdiga testversionen behövs ingen installation: packa upp `outputs/La-Gustosa-test.zip` och dubbelklicka på `STARTA-HAR.html`. Filen innehåller bilder, typsnitt, menydata och JavaScript. `MOBILVY.html` visar samma fil i en mobilram och ska ligga i samma mapp. Paketet skapas med `node scripts/package-offline.mjs` och kan zippas med operativsystemets vanliga zip-funktion. Inga konton, serverdelar eller nycklar ingår.
 
-Dryckesmeny, veckolunch, shoppinglunch och AW visas i menyfönster på samma sida. `public/extra-menus.js` innehåller originalets kompletterande menyer; `scripts/import-extra-menus.py` återskapar dem från källkopiorna i `reference/`. Menyerna är ögonblicksbilder och behöver uppdateras när restaurangen ändrar dem. Inga länkar navigerar till den gamla webbplatsen. Kontaktlänkar använder telefon eller e-post; Hitta hit visar adressen lokalt.
+Dryckesmeny, veckolunch, shoppinglunch och AW visas i menyfönster på samma sida. `public/extra-menus.js` innehåller originalets kompletterande menyer; `scripts/import-extra-menus.py` återskapar dem från källkopiorna i `reference/`. Menyerna är ögonblicksbilder och behöver uppdateras när restaurangen ändrar dem. Inga länkar navigerar till den gamla webbplatsen. Kontaktlänkar använder telefon eller e-post. Instagram och Facebook visas i sidhuvud och sidfot. Karta och vägbeskrivning öppnas i Google Maps; dessa externa länkar öppnas i en ny flik. Originalets sociala profiler och restaurangens publicerade adress finns i `public/contact-data.js`. Inga sociala widgets eller kartinbäddningar laddas automatiskt.
 
 För utvecklingsservern:
 

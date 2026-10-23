@@ -5,6 +5,7 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {canonicalOrigin,pageMetadata,structuredData,robotsText,sitemapXml,seoHead} from '../lib/site-seo.mjs';
 import {getDetailMenu,escapeHtml} from '../public/menu-content.js';
+import {contactLinks} from '../public/contact-data.js';
 
 const publicRoot=fileURLToPath(new URL('../public/',import.meta.url));
 const stripMarkup=html=>html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g,'').replace(/<[^>]+>/g,'');
@@ -59,11 +60,15 @@ test('Preview remains unindexed; the production export allows search crawlers',a
   assert(urls.every(url=>url.startsWith(canonicalOrigin+'/')&&!url.includes('?')&&!url.includes('#')));
 });
 
-test('Menu page links and image references stay on the new website and resolve to files',async()=>{
+test('Menu navigation stays local; only verified social and map links may open externally',async()=>{
   for(const page of Object.values(pageMetadata)) {
     const directory=path.join(publicRoot,page.path);
     const html=await readFile(path.join(directory,'index.html'),'utf8');
-    assert.doesNotMatch(html,/<a\b[^>]*href="https?:/);
+    for (const [anchor,href] of html.matchAll(/<a\b[^>]*href="(https?:[^\"]+)"[^>]*>/gi)) {
+      assert(Object.values(contactLinks).includes(href.replaceAll('&amp;','&')),href);
+      assert.match(anchor,/target="_blank"/);
+      assert.match(anchor,/rel="noopener noreferrer"/);
+    }
     for(const [,reference] of html.matchAll(/(?:href|src)="(\.{1,2}\/[^"#]*)(?:#[^"]*)?"/g)) {
       const file=path.resolve(directory,reference);
       assert(!path.relative(publicRoot,file).startsWith('..'));

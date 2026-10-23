@@ -5,6 +5,7 @@ import {build} from 'esbuild';
 import assert from 'node:assert/strict';
 import { generateSeo } from './generate-seo.mjs';
 import { menuPaths } from '../public/menu-content.js';
+import { contactLinks } from '../public/contact-data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const source = path.join(root, 'public');
@@ -47,9 +48,12 @@ html = html.replace('</body>', `<script>\n${script}\n</script>\n<!-- Embedded fo
 // This copy never needs a server or network connection for its content.
 html = html.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n  <meta http-equiv="Content-Security-Policy" content="default-src \'none\'; img-src data:; font-src data:; style-src \'unsafe-inline\'; script-src \'unsafe-inline\'; connect-src \'none\'; base-uri \'none\'; form-action \'none\'">');
 assert(!/(?:src|href)="\.\//.test(html), 'Unbundled dependency');
-assert(!/href=["']https?:/i.test(html), 'External navigation');
+// Only the explicitly requested social profiles and maps may leave this copy.
+for (const [,href] of html.matchAll(/<a\b[^>]*href="(https?:[^\"]+)"/gi)) {
+  assert(Object.values(contactLinks).includes(href.replaceAll('&amp;','&')), 'Unexpected external navigation');
+}
 assert(!/<script[^>]+src=/.test(html), 'External script');
 await writeFile(path.join(output, 'STARTA-HAR.html'), html);
 await writeFile(path.join(output, 'MOBILVY.html'), await readFile(path.join(root,'scripts/offline-mobile.html'),'utf8'));
-await writeFile(path.join(output,'LAS-MIG.txt'), '\ufeff' + `LA GUSTOSA – TESTVERSION\n\n1. Packa upp zip-filen om du fått den som zip.\n2. Dubbelklicka på STARTA-HAR.html.\n\nSidan öppnas i din vanliga webbläsare. Ingen installation, inget konto och ingen server behövs. Bilder, typsnitt och menyer ingår i filen och fungerar utan internet.\n\nMOBILVY.html visar sidan i en mobilram på datorn, ungefär som en 6,3-tumsmobil. Låt den ligga i samma mapp som STARTA-HAR.html.\n\nTesta menyflikar, sökning, favoriter, snabbguide, galleri och bokningsformulär. Dryckesmeny, veckolunch, shoppinglunch och AW öppnas på samma sida.\n\nBokningsformuläret låter dig granska en förfrågan. Det reserverar inget bord och skickar inget automatiskt. Knappen ”Öppna i din e-postapp” förbereder ett mejl till ayush.giri2006@gmail.com. Om du själv skickar mejlet går det till restaurangen. Telefon- och e-postlänkar öppnar din vanliga app.\n\nMenyerna är en kopia av originalets innehåll, kontrollerat 19 oktober 2026. Ändringar hos restaurangen hämtas inte automatiskt.\n\nDu kan även skicka enbart STARTA-HAR.html till någon annan; den innehåller allt som behövs för själva sidan.\n`);
+await writeFile(path.join(output,'LAS-MIG.txt'), '\ufeff' + `LA GUSTOSA – TESTVERSION\n\n1. Packa upp zip-filen om du fått den som zip.\n2. Dubbelklicka på STARTA-HAR.html.\n\nSidan öppnas i din vanliga webbläsare. Ingen installation, inget konto och ingen server behövs. Bilder, typsnitt och menyer ingår i filen och fungerar utan internet.\n\nMOBILVY.html visar sidan i en mobilram på datorn, ungefär som en 6,3-tumsmobil. Låt den ligga i samma mapp som STARTA-HAR.html.\n\nTesta menyflikar, sökning, favoriter, snabbguide, galleri och bokningsformulär. Dryckesmeny, veckolunch, shoppinglunch och AW öppnas på samma sida.\n\nBokningsformuläret låter dig granska en förfrågan. Det reserverar inget bord och skickar inget automatiskt. Knappen ”Öppna i din e-postapp” förbereder ett mejl till ayush.giri2006@gmail.com. Om du själv skickar mejlet går det till restaurangen. Telefon- och e-postlänkar öppnar din vanliga app. Instagram, Facebook och Google Maps öppnas i en ny flik och behöver internet.\n\nMenyerna är en kopia av originalets innehåll, kontrollerat 19 oktober 2026. Ändringar hos restaurangen hämtas inte automatiskt.\n\nDu kan även skicka enbart STARTA-HAR.html till någon annan; den innehåller allt som behövs för själva sidan.\n`);
 console.log(JSON.stringify({output,htmlBytes:Buffer.byteLength(html),embeddedAssets:embedded.size}));

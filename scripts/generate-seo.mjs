@@ -4,6 +4,7 @@ import {fileURLToPath} from 'node:url';
 import {menuData, pageMetadata, seoHead, robotsText, sitemapXml} from '../lib/site-seo.mjs';
 import {getDetailMenu, renderDetailSections, escapeHtml} from '../public/menu-content.js';
 import {BOOKING_RECIPIENT} from '../public/booking.js';
+import {contactLinks} from '../public/contact-data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const source = path.join(root, 'public');
@@ -16,6 +17,7 @@ function initialDishes() {
 function menuPage(key, indexable) {
   const menu = getDetailMenu(key);
   const links = Object.entries(pageMetadata).filter(([kind])=>kind !== 'home').map(([kind,page])=>`<a href="../${page.path}"${key === kind ? ' aria-current="page"' : ''}>${escapeHtml(getDetailMenu(kind).title === 'Menyer' ? 'À la carte' : getDetailMenu(kind).title)}</a>`).join('');
+  const contact = [['map','Visa på kartan'],['instagram','Instagram'],['facebook','Facebook']].map(([key,label])=>`<a href="${escapeHtml(contactLinks[key])}" target="_blank" rel="noopener noreferrer" aria-label="${label} (öppnas i ny flik)">${label} <span aria-hidden="true">↗</span></a>`).join('');
   return `<!doctype html>
 <html lang="sv"><head>
   <meta charset="utf-8">
@@ -40,6 +42,7 @@ function menuPage(key, indexable) {
     <a class="text-link document-back" href="../#meny">Tillbaka till restaurangen <span aria-hidden="true">←</span></a>
   </main>
   <footer class="document-footer"><div class="wrap"><section><h2>La Gustosa</h2><address>Sandwallsplats 7,<br>50335 Borås</address><p><a href="tel:+46729939993">072-993 99 93</a><br><a href="mailto:${BOOKING_RECIPIENT}">Bokning via e-post</a><br><a href="mailto:info@lagustosa.se">info@lagustosa.se</a></p><p>Ring eller maila för att boka ett bord.</p></section><section><h2>Öppettider</h2><dl><div><dt>Måndag</dt><dd>Stängt</dd></div><div><dt>Tisdag</dt><dd>11:30-sent</dd></div><div><dt>Onsdag</dt><dd>11:30-22.00</dd></div><div><dt>Torsdag</dt><dd>11:30-22.00</dd></div><div><dt>Fredag</dt><dd>11:30-sent</dd></div><div><dt>Lördag</dt><dd>12:00-sent</dd></div><div><dt>Söndag</dt><dd>12:00-sent</dd></div></dl></section></div></footer>
+  <nav class="document-contact-links wrap" aria-label="Karta och sociala medier">${contact}</nav>
 </body></html>\n`;
 }
 
