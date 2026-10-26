@@ -62,6 +62,18 @@ test('Retrying an order with its request ID stores only one record',async()=>{
  assert.equal(b.inserted.length,1);assert.equal(b.inserted[0].status,'new');assert.equal(b.inserted[0].data.total,39000);
  assert.equal(b.calls.find(x=>x.url.includes('/rest/v1/')).options.headers.Authorization,undefined);
 });
+
+test('Guest and staff requests reject invalid phones and persist canonical international numbers',async()=>{
+ for(const action of ['order','book','staff-order','staff-book']) {
+   const manual=action.startsWith('staff-');
+   const data=action.endsWith('order')?values:{name:values.name,email:values.email,phone:values.phone,date:values.date,time:values.time,guests:'2'};
+   const b=backend();
+   const rejected=await b.handler(req(action,{id,values:{...data,phone:'call me maybe'}},manual?cookie:undefined));
+   assert.equal(rejected.status,400,action);assert.equal(b.inserted.length,0);
+   const accepted=await b.handler(req(action,{id,values:{...data,phone:'070-123 45 67'}},manual?cookie:undefined));
+   assert.equal(accepted.status,201,action);assert.equal(b.inserted[0].data.phone,'+46701234567');
+ }
+});
 test('Rate limits block guest submissions and manual submissions require staff',async()=>{
  const b=backend({allow:false});assert.equal((await b.handler(req('order',{id,values}))).status,429);
  assert.equal((await b.handler(req('staff-order',{id,values}))).status,401);assert.equal(b.inserted.length,0);

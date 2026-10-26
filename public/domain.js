@@ -1,4 +1,5 @@
 import { menuData } from './menu-data.js';
+import { normalizePhone, phoneError } from './phone.js';
 
 export function stockholmDate(now = new Date()) {
   const parts = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Stockholm', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now);
@@ -38,7 +39,8 @@ export function validateBooking(values, now = new Date()) {
   const guests = bookingGuestCount(values);
   if (!Number.isInteger(guests) || guests < (values.guests === 'group' ? 11 : 1) || guests > 999) return values.guests === 'group' ? 'Ange antal personer i sällskapet, minst 11. För fler än 999 personer, ring oss.' : 'Ange ett giltigt antal gäster.';
   if (!values.name?.trim() || !values.phone?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email || '')) return 'Fyll i namn, telefon och en giltig e-postadress.';
-  if (values.name.length > 100 || values.phone.length > 30 || values.email.length > 150 || (values.message || '').length > 800 || (values.occasion || '').length > 80) return 'Korta ner uppgifterna eller önskemålen och försök igen.';
+  if (!normalizePhone(values.phone)) return phoneError;
+  if (values.name.length > 100 || values.phone.length > 50 || values.email.length > 150 || (values.message || '').length > 800 || (values.occasion || '').length > 80) return 'Korta ner uppgifterna eller önskemålen och försök igen.';
   return '';
 }
 

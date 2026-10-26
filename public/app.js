@@ -4,6 +4,7 @@ import { stockholmDate, bookingTimes, validateBooking, normalize, localAnswer } 
 import { BOOKING_RECIPIENT, prepareBooking, sendBooking } from './booking.js';
 import { getDailyLunch, renderDailyLunch } from './daily-lunch.js';
 import { initRestaurantLive, sendManagedBooking } from './restaurant-live.js';
+import { wirePhone } from './phone.js';
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
@@ -84,6 +85,7 @@ function refreshTimes() { const date = $('#booking-date').value; const selected 
 function openBooking() { closeMobile(); if ($('#assistant-dialog').open) $('#assistant-dialog').close(); const now = new Date(), max = new Date(now); max.setUTCDate(max.getUTCDate()+180); $('#booking-date').min = stockholmDate(now); $('#booking-date').max = stockholmDate(max); if ($('#booking-date').value) refreshTimes(); openDialog(booking); }
 $$('[data-book]').forEach(button => button.addEventListener('click', openBooking));
 $('#booking-date').addEventListener('change', refreshTimes);
+wirePhone($('#booking-form'));
 $('#booking-form').addEventListener('submit', event => {
   event.preventDefault(); const values = Object.fromEntries(new FormData(event.currentTarget)); const error = validateBooking(values); if (error) { $('#booking-error').textContent = error; return; }
   bookingDraft = {...values,requestId:crypto.randomUUID()};

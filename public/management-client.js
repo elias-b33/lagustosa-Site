@@ -1,5 +1,6 @@
 import { bookingTimes, stockholmDate } from './domain.js';
 import { escapeHtml as esc } from './menu-content.js';
+import { wirePhone } from './phone.js';
 
 export const money = cents => new Intl.NumberFormat('sv-SE',{style:'currency',currency:'SEK',maximumFractionDigits:2}).format(cents/100);
 export async function api(action,body) {
@@ -13,6 +14,7 @@ export async function api(action,body) {
   return result;
 }
 export function wireDate(form) {
+  wirePhone(form);
   const date=form.elements.date,time=form.elements.time;
   const max=new Date(); max.setUTCDate(max.getUTCDate()+180);
   date.min=stockholmDate();date.max=stockholmDate(max);

@@ -1,4 +1,5 @@
 import { bookingGuestCount, validateBooking } from './domain.js';
+import { normalizePhone } from './phone.js';
 
 export const BOOKING_RECIPIENT = 'ayush.giri2006@gmail.com';
 export const BOOKING_ENDPOINT = `https://formsubmit.co/ajax/${BOOKING_RECIPIENT}`;
@@ -7,7 +8,7 @@ export function prepareBooking(values) {
   const guests = bookingGuestCount(values);
   const isGroup = guests > 10;
   const date = new Intl.DateTimeFormat('sv-SE', { dateStyle: 'full', timeZone: 'UTC' }).format(new Date(`${values.date}T12:00:00Z`));
-  const name = values.name.trim(), phone = values.phone.trim(), email = values.email.trim();
+  const name = values.name.trim(), phone = normalizePhone(values.phone), email = values.email.trim();
   const occasion = isGroup ? (values.occasion || '').trim() : '';
   const flexible = isGroup && values.flexibleTime === 'ja';
   const message = (values.message || '').trim();
