@@ -26,6 +26,8 @@ node scripts/run-framework.mjs dev --port 4177 --hostname 127.0.0.1
 
 ## Det som fungerar
 
+Instagram och Facebook följer med som en kompakt, genomskinlig sidolist på dator. På mobilen ligger de längst ned till vänster, åtskilda från snabbguiden. Ikonerna är större, har tydliga klickytor och döljs när ett dialogfönster är öppet. Ingen bakgrundsoskärpa eller rullningsanimation används.
+
 - 45 rätter i åtta kategorier med priser från originalets à la carte-meny.
 - Sökning över hela menyn och lokalt sparade favoriter.
 - Bokningsförfrågan med datum, önskad tid, antal gäster och kontaktuppgifter. Måndagar, passerade datum och tider med för kort framförhållning blockeras. Gästen granskar först och skickar därefter via FormSubmit till ayush.giri2006@gmail.com utan att lämna sidan. Sällskap över tio anger exakt antal, tillfälle och eventuell flexibilitet i tid. Ingen bokning bekräftas automatiskt. Den lokala dubbelklickskopian använder gästens e-postapp.
