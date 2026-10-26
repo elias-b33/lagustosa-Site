@@ -25,6 +25,7 @@ async function dataUrl(file) {
 await generateSeo();
 let html = await readFile(path.join(source, 'index.html'), 'utf8');
 html = html.replace('<body>', '<body data-offline-copy="true">');
+html = html.replace(/<a\b[^>]*data-staff-link[^>]*>.*?<\/a>/g,'');
 // The double-click copy keeps menu navigation inside the same self-contained file.
 for (const menuPath of Object.values(menuPaths)) html = html.replaceAll(`href="./${menuPath}"`, 'href="#meny"');
 html = html.replace(/\s*<link rel="canonical"[^>]*>/g, '')
@@ -38,8 +39,10 @@ for (const match of [...fonts.matchAll(/url\(([^)]+)\)/g)]) {
   fonts = fonts.replace(match[0], `url(${await dataUrl(path.resolve(source, 'assets/fonts', match[1]))})`);
 }
 const css = await readFile(path.join(source, 'styles.css'), 'utf8');
+const serviceCss = await readFile(path.join(source, 'service.css'), 'utf8');
 html = html.replace('<link rel="stylesheet" href="./assets/fonts/fonts.css">', `<style>\n${fonts}\n</style>`)
   .replace('<link rel="stylesheet" href="./styles.css">', `<style>\n${css}\n</style>`)
+  .replace('<link rel="stylesheet" href="./service.css">', `<style>\n${serviceCss}\n</style>`)
   .replace('  <script type="module" src="./app.js"></script>', '');
 const bundle = await build({entryPoints:[path.join(source,'app.js')],bundle:true,write:false,format:'iife',platform:'browser',target:'es2020',charset:'utf8',legalComments:'inline'});
 const script = bundle.outputFiles[0].text.replace(/<\/script/gi, '<\\/script');

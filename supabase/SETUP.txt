@@ -1,0 +1,93 @@
+LA GUSTOSA — AKTIVERA DATABAS OCH PERSONALVY
+
+Projekt: https://supabase.com/dashboard/project/kvtbhkvfljtpbteejsmj
+Ägare: Elias, eliasbredberg5@gmail.com
+Tillfällig testanvändare: eliasbredberg5@gmail.com
+Testanvändarens UID: 3659e625-00a8-4ccd-8f2d-04dc9f3c6b5b
+Avsedd personalanvändare efter test: ayush.giri2006@gmail.com
+SQL-schemat är kört av Elias och rapporterade Success den 26 oktober 2026.
+
+Koden är förberedd. Följande inställningar måste göras i dina egna konton.
+Inga bokningar importeras automatiskt från tidigare mejl.
+
+1. SKAPA TABELLER
+Öppna projektets SQL Editor, välj New query och kör innehållet i
+supabase/001_restaurant.sql EN gång. Det skapar fyra tabeller och
+aktiverar RLS. Ingen anonym eller vanlig inloggad Supabase-användare
+kan läsa dem direkt. Restaurangens server sköter kontrollerade åtgärder.
+Förväntat resultat: Success. No rows returned.
+
+2. SKAPA AYUSHS PERSONALINLOGGNING
+Authentication > Users > Add user > Create new user.
+Ange ayush.giri2006@gmail.com och ett starkt unikt lösenord.
+Gör detta tillsammans med Ayush så han får välja och behålla lösenordet.
+Bekräfta just detta konto när identiteten är kontrollerad. Ändra INTE
+projektets globala krav på e-postbekräftelse för att få det att fungera.
+Kopiera användarens UID (UUID) till steg 3.
+Stäng av Allow new users to sign up i projektets Auth-inställningar.
+Lägg inte till Ayush som medlem i Supabase-organisationen, GitHub eller Vercel.
+Hans personalinloggning räcker.
+
+3. ANSLUT VERCEL
+Vercel > lagustosasite > Settings > Environment Variables.
+Lägg till följande för Production (och Preview endast om testmiljön behöver dem):
+
+NEXT_PUBLIC_SUPABASE_URL
+  https://kvtbhkvfljtpbteejsmj.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  Din publishable key från Supabase (samma som i den lokala .env.local).
+SUPABASE_SECRET_KEY
+  Supabase > Project Settings > API Keys > Secret key.
+  Endast på servern. Aldrig NEXT_PUBLIC_, aldrig i GitHub eller chatt.
+STAFF_USER_ID
+  Testanvändarens UID ovan. Byt till Ayushs UID efter test.
+STAFF_EMAIL
+  eliasbredberg5@gmail.com under test. Byt till ayush.giri2006@gmail.com
+  tillsammans med STAFF_USER_ID när Ayushs användare är skapad.
+PUBLIC_SITE_ORIGIN
+  https://lagustosasite.vercel.app
+RATE_LIMIT_SECRET
+  En ny slumpmässig hemlighet, minst 32 tecken, genererad i lösenordshanteraren.
+
+Lägg motsvarande privata värden i .env.local endast om du behöver testa
+backend lokalt. Filen ignoreras av Git. Publicera sedan om i Vercel.
+Vid domänbyte måste PUBLIC_SITE_ORIGIN ändras till exakt hemsidans origin.
+Den lokala .env.vercel är förberedd med alla värden utom Supabase secret key.
+Den kan importeras i Vercels Environment Variables. Filen är privat och
+ignoreras av Git; lägg inte in den i GitHub eller dela testpaketet med den.
+
+4. TESTA OCH AKTIVERA
+Öppna https://lagustosasite.vercel.app/admin/ och logga in som Ayush.
+Kontrollera att Bokningar och Beställningar går att öppna.
+Under Information & meny: välj rätter och kontrollera avhämtningspriserna.
+Aktivera Ta emot beställningsförfrågningar och spara.
+Gästens beställningsknapp visas först efter detta.
+Gör en tydligt märkt provbeställning och bordsförfrågan, kontrollera listan,
+gruppstorlek, statusändring och utloggning. En sådan bokning kan skicka en
+FormSubmit-notis till Ayush. Informera honom innan ett verkligt test.
+Markera provförfrågningar Avbokad. Ingen nätbetalning finns.
+
+5. ENGÅNGSKOD ÄR ETT VALFRITT SENARE ALTERNATIV
+Lösenordsinloggningen kräver inget mejlutskick vid varje inloggning.
+Supabases inbyggda mejltjänst skickar bara till organisationens medlemmar
+och är inte avsedd för drift. För engångskoder/lösenordsåterställning behövs
+egen SMTP under Authentication > Email > SMTP Settings.
+Magic Link-mallen måste innehålla {{ .Token }} för att skicka en kod.
+Lägg aldrig till personal i projektorganisationen för att kringgå detta.
+https://supabase.com/docs/guides/auth/auth-smtp
+
+DRIFT OCH BEGRÄNSNINGAR
+- Statisk Sites-förhandsvisning/offlinekopian har inte denna Vercel-backend.
+- Bokning via mejl finns kvar tills API:t är konfigurerat. Vid ett aktivt
+  API-fel uppmanas gästen att ringa; inga fel maskeras som lyckade bokningar.
+- Databasen är huvudregistret efter aktivering. Mejlnotiser kan misslyckas;
+  personalvyn visar om leverans inte har bekräftats av FormSubmit.
+- Statusändringar skickar inte automatiskt besked till gästen. Ring/mejla.
+- Personalvyn uppdateras var 30:e sekund när den är synlig och inte redigeras.
+- Gratis Supabase-projekt kan pausas efter låg aktivitet. Ingen automatisk
+  uppgradering eller betalt abonnemang har beställts.
+- Förfrågningar innehåller kontaktuppgifter. Bestäm och tillämpa en
+  gallringsrutin innan skarp drift; automatisk gallring är inte aktiverad.
+- Dynamisk veckolunch uppdateras i webbläsaren. HTML-export/offlinekopia
+  innehåller fortfarande senast publicerad grundmeny.
+- Inga Foodora/Wolt-order hämtas in. Det är externa beställningslänkar.

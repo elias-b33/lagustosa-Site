@@ -5,4 +5,6 @@ export const contactLinks = {
   facebook: 'https://www.facebook.com/pages/category/Restaurant/La-Gustosa-Bor%C3%A5s-289395165178709/',
   map: 'https://www.google.com/maps/search/?api=1&query=La%20Gustosa%2C%20Sandwallsplats%207%2C%20Bor%C3%A5s',
   directions: 'https://www.google.com/maps/dir/?api=1&destination=La%20Gustosa%2C%20Sandwallsplats%207%2C%20Bor%C3%A5s',
+  foodora: 'https://www.foodora.se/restaurant/s5fy/la-gustosa',
+  wolt: 'https://wolt.com/en/swe/boras/restaurant/la-gustosa',
 };

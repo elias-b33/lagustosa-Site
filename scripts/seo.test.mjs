@@ -22,13 +22,15 @@ test('Every menu is delivered as readable HTML without executing JavaScript',asy
     if(key==='home')continue;
     const visible=stripMarkup(html);
     for(const section of getDetailMenu(key).sections) {
+      for(const paragraph of section.paragraphs||[]) assert(visible.includes(escapeHtml(paragraph)),`${key}: missing static lunch text`);
       for(const item of section.items||[]) {
         assert(visible.includes(escapeHtml(item.name)),`${key}: missing ${item.name}`);
         if(item.priceLabel)assert(visible.includes(escapeHtml(item.priceLabel)));
         if(item.description)assert(visible.includes(escapeHtml(item.description)));
       }
     }
-    assert(!/<script[^>]+src=/.test(html),'Menu page must not require scripts');
+    const scripts=[...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map(x=>x[1]);
+    assert.deepEqual(scripts,key==='lunch'?['../lunch-live.js']:[],'Only optional live-lunch enhancement is allowed');
   }
 });
 

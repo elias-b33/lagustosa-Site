@@ -3,6 +3,7 @@ import { getDetailMenu, renderDetailSections, menuPaths } from './menu-content.j
 import { stockholmDate, bookingTimes, validateBooking, normalize, localAnswer } from './domain.js';
 import { BOOKING_RECIPIENT, prepareBooking, sendBooking } from './booking.js';
 import { getDailyLunch, renderDailyLunch } from './daily-lunch.js';
+import { initRestaurantLive, sendManagedBooking } from './restaurant-live.js';
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
@@ -85,7 +86,7 @@ $$('[data-book]').forEach(button => button.addEventListener('click', openBooking
 $('#booking-date').addEventListener('change', refreshTimes);
 $('#booking-form').addEventListener('submit', event => {
   event.preventDefault(); const values = Object.fromEntries(new FormData(event.currentTarget)); const error = validateBooking(values); if (error) { $('#booking-error').textContent = error; return; }
-  bookingDraft = values;
+  bookingDraft = {...values,requestId:crypto.randomUUID()};
   const prepared = prepareBooking(values);
   $('#booking-error').textContent = '';
   $('#booking-send-error').textContent = '';
@@ -107,7 +108,7 @@ $('#booking-send').addEventListener('click', async () => {
   $('#booking-review').setAttribute('aria-busy', 'true');
   $('#booking-send').textContent = 'Skickar…';
   $('#booking-send-error').textContent = '';
-  const result = await sendBooking(bookingDraft, { pageUrl: location.href });
+  const result = await sendManagedBooking(bookingDraft, { pageUrl: location.href });
   bookingSending = false;
   $('#booking-back').disabled = false;
   $('#booking-email').removeAttribute('aria-disabled');
@@ -280,3 +281,5 @@ if (FREE_TEXT_CHAT_ENABLED) {
 $('#privacy-open').addEventListener('click',()=>openDialog($('#privacy-dialog')));
 $('#clear-saved').addEventListener('click',()=> { saved.clear(); try { localStorage.removeItem(savedKey); } catch {} renderMenu(); $('#privacy-status').textContent='Dina sparade rätter har rensats.'; });
 $('#year').textContent=new Date().getFullYear();
+
+initRestaurantLive();

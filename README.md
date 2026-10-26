@@ -132,3 +132,13 @@ Menyer, favoriter, snabbguide och bokningsförfrågan via FormSubmit fungerar fr
 Projekt-ID och hostinginställningar finns i `.openai/hosting.json`. Webbplatsen är privat för ägaren. Den ersätter inte lagustosa.se. Använd Sites käll- och publiceringsflöde för att spara och distribuera nya versioner. Behåll `sites()`-integrationen i Vite.
 
 `public/index.html` har `noindex` eftersom detta är en privat arbetsversion. Ta bort det först när restaurangen ska lansera sin publika sida och har kontrollerat innehållet.
+
+## Personalvy, Supabase och takeaway
+
+Personalvyn finns på /admin/ i Vercel-versionen. Den ger endast Ayush tillgång till bokningar, takeaway, aktuell information, veckolunch och avhämtningspriser. Gäster behöver inget konto. Betalning sker på plats; externa Foodora/Wolt-beställningar hanteras hos leverantören.
+
+Supabase SDK och SSR-hjälpare är installerade. API:t använder säkra HttpOnly-cookies och förnyar sessioner på servern. Next/Vinext har även en avgränsad proxy för admin. Hemliga nycklar stannar i servermiljön, och varje personalåtgärd verifierar både Supabase-användar-ID och bekräftad e-postadress.
+
+Aktiveringsstegen finns i supabase/SETUP.txt; databasschemat i supabase/001_restaurant.sql. Tills dessa steg är klara är beställningar avstängda och befintligt mejlformulär används. Gamla mejlbokningar importeras inte. Inga skarpa testbeställningar har skickats under implementationen.
+
+Test: node --test scripts/*.test.mjs. Lokal UI-kontroll görs med tydligt märkta testdata. Cloud-databas, riktig personalinloggning och mejlleverans måste verifieras efter konfiguration.
