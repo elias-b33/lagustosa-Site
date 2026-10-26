@@ -52,12 +52,12 @@ dialog{border:0;padding:45px;background:var(--paper);color:var(--ink);max-width:
 .document-contact-links{display:flex;flex-wrap:wrap;gap:12px 28px;padding-block:22px;font-size:15px}.document-contact-links a{padding:7px 0;border-bottom:1px solid var(--line)}
 
 /* A small, fixed social rail stays readable without expensive backdrop filters. */
-.topline-socials{position:fixed;right:10px;top:50%;transform:translateY(-50%);z-index:8;display:flex;flex-direction:column;gap:2px;padding:4px;border:1px solid #4a51464d;border-radius:6px;background:rgba(247,245,239,.78);box-shadow:0 2px 10px #00000012;color:var(--ink)}
-.topline-socials a{width:46px;min-width:46px;height:46px;min-height:46px;border-radius:3px}
+.topline-socials{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:8;display:flex;flex-direction:column;gap:2px;padding:1px;border:1px solid #4a51464d;border-radius:6px;background:rgba(247,245,239,.78);box-shadow:0 2px 10px #00000012;color:var(--ink)}
+.topline-socials a{width:44px;min-width:44px;height:44px;min-height:44px;border-radius:3px}
 .topline-socials svg{width:30px;height:30px}
 .topline-socials a:hover{background:var(--paper);color:var(--wine)}
 .topline-socials a:focus-visible{outline-offset:0;background:var(--paper)}
 .social-links svg{width:26px;height:26px}.social-links a{font-size:16px;min-height:48px}
 body:has(dialog[open]) .topline-socials{visibility:hidden}
-@media(max-width:760px){.topline-socials{top:auto;bottom:max(16px,env(safe-area-inset-bottom));left:12px;right:auto;transform:none;flex-direction:row;padding:2px;gap:0}.topline-socials a{width:44px;min-width:44px;height:44px;min-height:44px}.topline-socials svg{width:28px;height:28px}}
+@media(max-width:1100px){.topline-socials{top:auto;bottom:max(16px,env(safe-area-inset-bottom));left:12px;right:auto;transform:none;flex-direction:row;padding:2px;gap:0}.topline-socials a{width:44px;min-width:44px;height:44px;min-height:44px}.topline-socials svg{width:28px;height:28px}}
 @media(prefers-reduced-transparency:reduce){.topline-socials{background:var(--paper)}}
