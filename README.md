@@ -135,10 +135,12 @@ Projekt-ID och hostinginställningar finns i `.openai/hosting.json`. Webbplatsen
 
 ## Personalvy, Supabase och takeaway
 
-Personalvyn finns på /admin/ i Vercel-versionen. Den ger endast Ayush tillgång till bokningar, takeaway, aktuell information, veckolunch och avhämtningspriser. Gäster behöver inget konto. Betalning sker på plats; externa Foodora/Wolt-beställningar hanteras hos leverantören.
+Personalvyn finns på /admin/ i Vercel-versionen. Den ger den utvalda personalanvändaren tillgång till bokningar, takeaway, aktuell information, veckolunch och avhämtningspriser. Gäster behöver inget konto. Betalning sker på plats; externa Foodora/Wolt-beställningar hanteras hos leverantören.
 
 Supabase SDK och SSR-hjälpare är installerade. API:t använder säkra HttpOnly-cookies och förnyar sessioner på servern. Next/Vinext har även en avgränsad proxy för admin. Hemliga nycklar stannar i servermiljön, och varje personalåtgärd verifierar både Supabase-användar-ID och bekräftad e-postadress.
 
 Aktiveringsstegen finns i supabase/SETUP.txt; databasschemat i supabase/001_restaurant.sql. Tills dessa steg är klara är beställningar avstängda och befintligt mejlformulär används. Gamla mejlbokningar importeras inte. Inga skarpa testbeställningar har skickats under implementationen.
 
 Test: node --test scripts/*.test.mjs. Lokal UI-kontroll görs med tydligt märkta testdata. Cloud-databas, riktig personalinloggning och mejlleverans måste verifieras efter konfiguration.
+
+Under uppsättningen används Elias testkonto. STAFF_EMAIL och STAFF_USER_ID byts tillsammans när Ayush tar över. Den 26 oktober 2026 godkändes samma priser för takeaway som hemsidans matmeny. Vercel kör en engångsinitialisering av den tomma beställningsmenyn; redan redigerade inställningar skrivs aldrig över.
