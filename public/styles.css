@@ -61,3 +61,16 @@ dialog{border:0;padding:45px;background:var(--paper);color:var(--ink);max-width:
 body:has(dialog[open]) .topline-socials{visibility:hidden}
 @media(max-width:1100px){.topline-socials{top:auto;bottom:max(16px,env(safe-area-inset-bottom));left:12px;right:auto;transform:none;flex-direction:row;padding:2px;gap:0}.topline-socials a{width:44px;min-width:44px;height:44px;min-height:44px}.topline-socials svg{width:28px;height:28px}}
 @media(prefers-reduced-transparency:reduce){.topline-socials{background:var(--paper)}}
+/* Keep takeaway visible in the first screen, with the existing restaurant palette. */
+.hero-actions{flex-wrap:wrap}
+.hero-actions .hero-order{background:var(--paper);color:var(--wine);border:1px solid var(--paper);font-size:17px;font-weight:600;min-height:56px;gap:24px}
+.hero-actions .hero-order:hover{background:#e9e5da;border-color:#e9e5da}
+.hero-content>p.hero-order-note{font-size:14px;line-height:1.6;margin:15px auto 0;color:#f7f5ef}
+#avhamtning{scroll-margin-top:28px}
+@media(max-width:760px){
+  .hero-actions{max-width:380px;margin-inline:auto;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .hero-actions .hero-order{grid-column:1/-1;font-size:17px;min-height:56px;justify-content:center;padding-inline:18px}
+  .hero-actions .button:not(.hero-order){justify-content:center;font-size:14px}
+  .hero-content>p.hero-order-note{font-size:13px;margin-top:13px}
+}
+@media(max-width:360px){.hero-content{padding-top:180px}.hero-content h1{font-size:43px}.hero-actions .hero-order{font-size:16px}}

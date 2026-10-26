@@ -23,10 +23,13 @@ export async function initRestaurantLive() {
     if(config.notice){const p=document.createElement('p');p.className='restaurant-notice wrap';p.textContent=config.notice;const anchor=document.querySelector('.occasion-bar') || document.querySelector('main');anchor?.after(p);}
     const privacy=document.querySelector('#booking-privacy');if(privacy)privacy.textContent='När du skickar en förfrågan sparas namn, kontaktuppgifter och önskemål i restaurangens bokningsregister. En bokningsnotis kan också skickas via FormSubmit till restaurangen. Uppgifterna används för att hantera ditt besök. Ring restaurangen om du vill få hjälp med dina uppgifter.';
     if(config.ordering && config.catalog?.length) {
-      const button=document.querySelector('#takeaway-order-open');if(!button)return;
-      button.hidden=false;
-      button.addEventListener('click',()=>{
-        const dialog=document.querySelector('#takeaway-order-dialog');mountOrder(dialog.querySelector('.order-body'),config.catalog);dialog.showModal();
+      const dialog=document.querySelector('#takeaway-order-dialog');if(!dialog)return;
+      document.querySelectorAll('[data-order]').forEach(button=>{
+        button.hidden=false;
+        button.addEventListener('click',event=>{
+          event.preventDefault();
+          mountOrder(dialog.querySelector('.order-body'),config.catalog);dialog.showModal();
+        });
       });
     }
   } catch { /* Static restaurant content remains usable during service outages. */ }
