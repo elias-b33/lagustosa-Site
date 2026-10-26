@@ -1,0 +1,57 @@
+LA GUSTOSA – GRATIS AUTOMATISKA KUNDMEJL
+
+Koden är förberedd. Kundmejl är AV tills konto, domän, databas och miljövariabler är klara.
+Bokning och takeaway fungerar under tiden. Inga gamla förfrågningar får mejl retroaktivt.
+
+1. GRATIS KONTO
+Skapa konto på https://resend.com/signup med eliasbredberg5@gmail.com.
+Välj Free. Inget betalt abonnemang eller tillägg behövs.
+Kontrollerat 26 oktober 2026: 3 000 mejl/månad och högst 100/dag.
+Två mejl per förfrågan motsvarar ungefär 50 fullständiga förlopp per dag, om inga andra utskick använder samma kvot.
+https://resend.com/pricing
+
+2. DOMÄN – VÄNNEN BEHÖVER GÖRA DETTA
+I Resend: Domains → Add domain → meddelanden.lagustosa.se.
+Använd en underdomän så att hemsidan och befintlig e-post påverkas så lite som möjligt.
+Lägg till exakt de DNS-poster Resend visar hos den som hanterar lagustosa.se.
+Aktivera endast Sending. Ersätt inte befintliga MX-poster på lagustosa.se.
+Vänta tills Resend visar Verified. En del DNS-ändringar behöver tid.
+https://resend.com/docs/dashboard/domains/introduction
+
+3. NYCKEL OCH VERCEL
+Skapa en Resend API-nyckel med Sending access, begränsad till denna domän.
+Spara följande för Production under Vercel → projektet lagustosasite → Settings → Environment Variables:
+
+RESEND_API_KEY = nyckeln från Resend (hemlig – klistra aldrig in den i chatten eller GitHub)
+CUSTOMER_EMAIL_FROM = La Gustosa <bokning@meddelanden.lagustosa.se>
+CUSTOMER_EMAIL_REPLY_TO = ayush.giri2006@gmail.com
+
+Redeploy efter att variablerna sparats.
+Använd inte NEXT_PUBLIC_ för någon av dessa variabler.
+
+4. DATABAS
+Öppna Supabase-projektet kvtbhkvfljtpbteejsmj → SQL Editor → New query.
+Klistra in hela filen 002_customer_email.sql i samma mapp och klicka Run EN gång.
+Det skapar en privat mejlkö med skydd mot dubbla utskick. Kör inte 001_restaurant.sql igen.
+Gör detta när Resend och Vercel är klara; nya förfrågningar läggs i kön från detta steg.
+
+5. TESTA INNAN NI SÄGER ATT MEJLEN ÄR IGÅNG
+Registrera en tydligt märkt testförfrågan med din egen e-postadress.
+Kontrollera att du får ett mottagningsmejl som säger att den INTE är bekräftad.
+Välj Bekräftad i admin. Kontrollera att ett separat bekräftelsemejl kommer fram.
+Verifiera bokning och takeaway. Markera testposterna Avbokad när ni är klara.
+Kontrollera skräppost och Resends utskickslogg vid problem.
+
+SÅ FUNGERAR DET
+Mottagningsmejl: nya bordsförfrågningar och takeaway, även registrerade av personal.
+Bekräftelsemejl: när personalen byter status till Bekräftad.
+Andra statusändringar: personalen kontaktar kunden själv, inklusive nekande och avbokning.
+SMS ingår inte och har inte aktiverats.
+
+OM ETT MEJL MISSLYCKAS
+Förfrågan sparas ändå. Admin visar mejlstatus och en knapp för att försöka igen.
+”Lämnat till mejltjänsten” innebär att Resend accepterat det, inte att inkorgen bekräftat leverans.
+Denna version har ingen bakgrundsprocess för automatiska återförsök. Använd knappen i admin vid fel.
+Samma meddelande och idempotensnyckel återanvänds vid återförsök inom 23 timmar.
+Äldre eller ersatta besked skickas inte automatiskt – kontakta gästen manuellt.
+Gratisplanens gräns ger ett fel som syns i admin; koden uppgraderar aldrig abonnemanget.

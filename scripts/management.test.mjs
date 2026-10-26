@@ -84,6 +84,30 @@ test('Settings cannot contain system settings or arbitrary menu prices',()=>{
  assert.throws(()=>validateSettings({...config,catalog:[{id:menuData.items[0].id,price:-1}]}),e=>e.status===400);
  assert.equal(validateSettings(config).ordering,true);
 });
+
+test('Customer mail follows saved requests and confirmations; mail failures never undo either',async()=>{
+ let record=null,deliveries=0,claimed=0;
+ const mailEnv={...env,RESEND_API_KEY:'re_test',CUSTOMER_EMAIL_FROM:'La Gustosa <booking@example.com>'};
+ const fetchImpl=async(url,options={})=>{
+  const u=String(url);
+  if(u.endsWith('/auth/v1/user'))return Response.json(user);
+  if(u.includes('/rpc/lg_rate_limit'))return Response.json(true);
+  if(u.includes('/lg_settings'))return Response.json([{data:config,revision:1}]);
+  if(u.includes('/lg_requests?on_conflict')){if(record)return Response.json([]);record={...JSON.parse(options.body),revision:1};return Response.json([record]);}
+  if(u.includes('/lg_requests?')){if(options.method==='PATCH'){record={...record,...JSON.parse(options.body),revision:record.revision+1};}return Response.json([record]);}
+  if(u.includes('/rpc/lg_claim_customer_mail')){claimed++;const {target_event:event}=JSON.parse(options.body);assert.ok(record);assert.equal(record.status,event==='confirmed'?'confirmed':'new');return Response.json([{id:crypto.randomUUID(),request_id:id,kind:'order',event,data:record.data}]);}
+  if(u.includes('/lg_customer_mail?'))return new Response(null,{status:204});
+  if(u==='https://api.resend.com/emails'){deliveries++;return Response.json({message:'quota reached'},{status:429});}
+  throw Error('Unexpected request '+u);
+ };
+ const handler=createManagementHandler({env:mailEnv,fetchImpl,now:()=>now});
+ const first=await handler(req('order',{id,values}));assert.equal(first.status,201);assert.equal((await first.json()).customerEmail,'failed');assert.equal(record.status,'new');
+ assert.equal((await handler(req('order',{id,values}))).status,201);assert.equal(deliveries,1,'Duplicate submission cannot resend');
+ const confirmed=await handler(req('status',{id,status:'confirmed',revision:1},cookie));assert.equal(confirmed.status,200);assert.equal((await confirmed.json()).customerEmail,'failed');assert.equal(record.status,'confirmed');assert.equal(deliveries,2);
+ await handler(req('status',{id,status:'confirmed',revision:2},cookie));assert.equal(deliveries,2,'Saving the same status must not send another confirmation');
+ assert.equal((await handler(req('retry-customer-email',{id}))).status,401);assert.equal(claimed,2,'Guests cannot retry mail');
+ assert.equal((await handler(req('status',{id,status:'cancelled',revision:1},cookie))).status,409);assert.equal(record.status,'confirmed');
+});
 test('OTP verification stores HttpOnly secure session cookies, never tokens in JSON',async()=>{
  const b=backend();const fetchImpl=async(url,options)=>String(url).endsWith('/auth/v1/verify')?Response.json({...session,user}):b.calls.push({url})&&Response.json(true);
  const handler=createManagementHandler({env,fetchImpl,now:()=>now});

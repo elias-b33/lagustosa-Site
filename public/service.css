@@ -10,3 +10,4 @@
 label:has(.phone-control [aria-invalid=true]) .phone-feedback{color:#a22136}
 .phone-control input[aria-invalid=true]{border-color:#a22136}
 .booking-dialog .form-row.two:has(.phone-control){grid-template-columns:1fr}
+.customer-mail-state{padding:12px 0;font-size:13px;color:var(--muted)}.customer-mail-state p{margin:4px 0}.customer-mail-state .text-link{margin-top:8px;font-size:13px}

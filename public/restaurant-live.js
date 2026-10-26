@@ -22,6 +22,7 @@ export async function initRestaurantLive() {
     const lunchDocument=document.querySelector('[data-live-lunch]');if(lunchDocument)lunchDocument.innerHTML=renderDetailSections(extraMenus.lunch,2);
     if(config.notice){const p=document.createElement('p');p.className='restaurant-notice wrap';p.textContent=config.notice;const anchor=document.querySelector('.occasion-bar') || document.querySelector('main');anchor?.after(p);}
     const privacy=document.querySelector('#booking-privacy');if(privacy)privacy.textContent='När du skickar en förfrågan sparas namn, kontaktuppgifter och önskemål i restaurangens bokningsregister. En bokningsnotis kan också skickas via FormSubmit till restaurangen. Uppgifterna används för att hantera ditt besök. Ring restaurangen om du vill få hjälp med dina uppgifter.';
+    if(privacy && config.customerEmails)privacy.textContent+=' Mottagnings- och bekräftelsemejl för bokning och takeaway förmedlas via Resend med din e-postadress och uppgifterna om din förfrågan.';
     if(config.ordering && config.catalog?.length) {
       const dialog=document.querySelector('#takeaway-order-dialog');if(!dialog)return;
       document.querySelectorAll('[data-order]').forEach(button=>{
